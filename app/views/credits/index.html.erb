@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>외상거래지</h1>
+
+<table class="table table-hover table-condensed" style="margin-top: 20px;">
+  <thead>
+    <tr>
+      <th class="h-align">날짜</th>
+      <th class="h-align">외상자</th>
+      <th class="h-align">금액</th>
+      <th class="h-align">잔액</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @credits.each do |credit| %>
+      <tr>
+        <td><%= credit.date %></td>
+        <td><%= credit.name %></td>
+        <td><%= credit.cost %></td>
+        <td><%= credit.status %></td>
+        <!--<td><%= link_to 'Show', credit %></td>-->
+        <!--<td><%= link_to 'Edit', edit_credit_path(credit) %></td>-->
+        <!--<td><%= link_to 'Destroy', credit, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<button class="btn-sm">
+<%= link_to '추가', new_credit_path %>
+</button>
+

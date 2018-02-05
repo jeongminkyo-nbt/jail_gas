@@ -1,10 +1,10 @@
 $light-orange: #ff8c00;
 $navbar-default-color: $light-orange;
-$navbar-default-bg: #312312;
+$navbar-default-bg: #ffffff;
 $navbar-default-link-color: gray;
 $navbar-default-link-active-color: $light-orange;
 $navbar-default-link-hover-color: white;
-$navbar-default-link-hover-bg: black;
+$navbar-default-link-hover-bg: white-gray;
 
 @import "bootstrap-sprockets";
 @import "bootstrap";

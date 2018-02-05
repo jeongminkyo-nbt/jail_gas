@@ -1,0 +1,26 @@
+<%= simple_form_for(@credit) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :date %>
+    <%= f.input :name %>
+    <%= f.input :cost %>
+  </div>
+
+  <div class="form-actions btn-sm", style="float:left">
+    <%= f.button :submit %>
+    <button class="btn-sm">
+      <%= link_to 'Back', credits_path %>
+    </button>
+  </div>
+
+
+<% end %>
+
+<script>
+    $(function() {
+        $( "#credit_date" ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+</script>
