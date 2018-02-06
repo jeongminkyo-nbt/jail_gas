@@ -25,7 +25,6 @@ class CreditsController < ApplicationController
   # POST /credits.json
   def create
     @credit = Credit.new(credit_params)
-    p credit_params
     respond_to do |format|
       if @credit.save
         format.html { redirect_to credits_url, notice: '외상목록이 성공적으로 생성되었습니다.' }

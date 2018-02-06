@@ -31,11 +31,12 @@
 
   <br>
 
-  <button class="btn-sm">
-    <%= link_to '추가', new_credit_path %>
-  </button>
+    <%= f.button :submit, class: 'btn-sm'%>
 
-  <%= submit_tag '외상납부',class: 'btn-sm', name: 'pay_credits' %>
+
+  <button class="btn-sm">
+    <%= link_to 'Back', credits_path %>
+  </button>
 <% end %>
 
 <script>
