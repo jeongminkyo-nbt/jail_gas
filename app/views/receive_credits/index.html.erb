@@ -1,63 +1,39 @@
-<style>
-  table thead tr th {
-    text-align: center;
-  }
-
-  table tbody tr td {
-    text-align: center;
-  }
-
-  table tr.linkable {
-    cursor: pointer;
-  }
-  select {
-    width: 70px;
-    background-color: #ffffff;
-    background-image: none !important;
-    border: 1px solid #e5e5e5;
-    outline: none;
-    min-height: 35px;
-  }
-</style>
-
 <p id="notice"><%= notice %></p>
 
-<h1>외상거래지</h1>
+<h1>수금현황</h1>
 
-<%= form_tag pay_credit_path do %>
-<table class="table table-hover no-more-tables" style="margin-top: 20px;">
-  <thead>
+<%= form_tag receive_credits_path do %>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
     <tr>
       <th class="h-align"><%= check_box_tag 'credits_checkall' %></th>
       <th class="h-align">날짜</th>
       <th class="h-align">외상자</th>
-      <th class="h-align">품목</th>
       <th class="h-align">금액</th>
       <th class="h-align">잔액</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <% @credits.each do |credit| %>
-    <tr>
+      <tr>
         <td><%= check_box_tag 'credit_ids[]', credit.id %></td>
         <td><%= credit.date %></td>
         <td><%= credit.name %></td>
-        <td><%= credit.product_name %></td>
         <td><%= number_with_delimiter(credit.cost) %></td>
-        <td><%= credit.status %></td>
+        <!--<td><%= link_to 'Show', credit %></td>-->
+        <!--<td><%= link_to 'Edit', edit_credit_path(credit) %></td>-->
+        <!--<td><%= link_to 'Destroy', credit, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
       </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
   <br>
 
-  <button class="btn-sm">
-    <%= link_to '추가', new_credit_path %>
   </button>
-
-  <%= submit_tag '외상납부',class: 'btn-sm', name: 'pay_credits' %>
+  <%= submit_tag '복구',class: 'btn-sm', name: 'return_credits' %>
 <% end %>
+
 <script>
     $(document).ready(function () {
         //최상단 체크박스 클릭
@@ -73,8 +49,9 @@
                 $("input[id=credit_ids_]").prop("checked", false);
             }
         });
-        $("li").first().addClass("active");
+        $("ul li:nth-child(2)").addClass("active");
     })
+
 
 
 </script>

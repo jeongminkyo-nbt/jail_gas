@@ -1,20 +1,41 @@
-<%= simple_form_for(@credit) do |f| %>
-  <%= f.error_notification %>
+<%= form_for(@credit) do |f| %>
+  <% if @credit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@credit.errors.count, "error") %> prohibited this post from being saved:</h2>
 
-  <div class="form-inputs">
-    <%= f.input :date %>
-    <%= f.input :name %>
-    <%= f.input :cost %>
-  </div>
+      <ul>
+        <% @credit.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
+    <tr>
+      <th class="h-align">날짜</th>
+      <th class="h-align">외상자</th>
+      <th class="h-align">품목</th>
+      <th class="h-align">금액</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= f.text_field :date%></td>
+        <td><%= f.text_field :name%></td>
+        <td><%= f.text_field :product_name%></td>
+        <td><%= f.text_field :cost%></td>
+      </tr>
+    </tbody>
+  </table>
 
-  <div class="form-actions btn-sm", style="float:left">
-    <%= f.button :submit %>
-    <button class="btn-sm">
-      <%= link_to 'Back', credits_path %>
-    </button>
-  </div>
+  <br>
 
+  <button class="btn-sm">
+    <%= link_to '추가', new_credit_path %>
+  </button>
 
+  <%= submit_tag '외상납부',class: 'btn-sm', name: 'pay_credits' %>
 <% end %>
 
 <script>
