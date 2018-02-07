@@ -7,11 +7,29 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore the default SQLite database.
+/db/*.sqlite3
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
 !/log/.keep
-!/tmp/.keep
+!/tmp/.kee
+
+*.gem
+/config/deploy.rb
+Gemfile.lock
+/local_config/*
+.idea/
+Capfile
+atlassian-ide-plugin.xml
+/vendor/*
+p
+# Ignore simplecov related directory
+/coverage
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# Ignore DB schema
+db/schema.rb
