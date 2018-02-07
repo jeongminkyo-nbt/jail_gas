@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>수금현황</h1>
+<h1>수금관리</h1>
 
-<%= form_tag recent_credits_path do %>
+<%= form_tag receive_credits_path do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>
     <tr>
@@ -31,7 +31,7 @@
   <br>
 
   </button>
-  <%= submit_tag '복구',class: 'btn-sm', name: 'return_credits' %>
+  <%= submit_tag '수금',class: 'btn-sm', name: 'return_credits' %>
 <% end %>
 
 <script>
@@ -49,7 +49,7 @@
                 $("input[id=credit_ids_]").prop("checked", false);
             }
         });
-        $("ul li:nth-child(2)").addClass("active");
+        $(".dropdown-menu").find('li').first().addClass("active");
     })
 
 

@@ -56,18 +56,14 @@ class CreditsController < ApplicationController
   end
 
   def payment
-    if params[:credit_ids].present?
-      if params[:pay_credits].present?
-        payment_ids = params[:credit_ids]
-        payment_ids.each do |id|
-          index = id.to_i
-          pay = Credit.find_by(id: index)
-          pay.update(status: 1)
-        end
-        respond_to do |format|
-          format.html { redirect_to credits_url, notice: '외상납부가 성공적으로 이루어졌습니다.' }
-        end
-      end
+    if params[:id].present?
+      pay = Credit.find_by(id: params[:id])
+      pay.update(status: 1)
+    end
+    if
+    respond_to do |format|
+      format.html { redirect_to credits_url, notice: '외상납부가 성공적으로 이루어졌습니다.' }
+    end
     else
       respond_to do |format|
         format.html { redirect_to credits_url, notice: '납부할 목록을 체크해주세요.' }

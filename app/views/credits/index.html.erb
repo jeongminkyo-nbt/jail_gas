@@ -24,11 +24,9 @@
 
 <h1>외상거래지</h1>
 
-<%= form_tag pay_credit_path do %>
 <table class="table table-hover no-more-tables" style="margin-top: 20px;">
   <thead>
     <tr>
-      <th class="h-align"><%= check_box_tag 'credits_checkall' %></th>
       <th class="h-align">날짜</th>
       <th class="h-align">외상자</th>
       <th class="h-align">품목</th>
@@ -38,14 +36,12 @@
   </thead>
   <tbody>
     <% @credits.each do |credit| %>
-    <tr>
-        <td><%= check_box_tag 'credit_ids[]', credit.id %></td>
-        <td><%= credit.date %></td>
-        <td><%= credit.name %></td>
-        <td><%= credit.product_name %></td>
-        <td><%= number_with_delimiter(credit.cost) %></td>
-        <td><%= credit.status %></td>
-      </tr>
+    <tr id="<%= dom_id(credit) %>"  class="linkable" data-href="<%= credits_path+'/'+credit.id.to_s %>">
+      <td><%= credit.date %></td>
+      <td><%= credit.name %></td>
+      <td><%= credit.product_name %></td>
+      <td><%= number_with_delimiter(credit.cost) %></td>
+    </tr>
     <% end %>
   </tbody>
 </table>
@@ -56,25 +52,14 @@
     <%= link_to '추가', new_credit_path %>
   </button>
 
-  <%= submit_tag '외상납부',class: 'btn-sm', name: 'pay_credits' %>
-<% end %>
 <script>
-    $(document).ready(function () {
-        //최상단 체크박스 클릭
-        $("#credits_checkall").click(function () {
-            //클릭되었으면
-            if ($("#credits_checkall").prop("checked")) {
-                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
-                $("input[id=credit_ids_]").prop("checked", true);
-
-                //클릭이 안되있으면
-            } else {
-                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 false로 정의
-                $("input[id=credit_ids_]").prop("checked", false);
-            }
+    $(document).ready(function(){
+        $('table td').click(function(){
+            window.location = $(this).parent().data('href');
+            return false;
         });
+
+        $('[data-toggle="tooltip"]').tooltip();
         $("li").first().addClass("active");
-    })
-
-
+    });
 </script>

@@ -1,24 +1,27 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Date:</strong>
-  <%= @credit.date %>
-</p>
+<table class="table table-hover no-more-tables" style="margin-top: 20px;">
+  <thead>
+  <tr>
+    <th class="h-align">날짜</th>
+    <th class="h-align">외상자</th>
+    <th class="h-align">품목</th>
+    <th class="h-align">금액</th>
+    <th class="h-align">잔액</th>
+  </tr>
+  </thead>
+  <tbody>
+      <td><%= @credit.date %></td>
+      <td><%= @credit.name %></td>
+      <td><%= @credit.product_name %></td>
+      <td><%= number_with_delimiter(@credit.cost) %></td>
+    </tr>
+  </tbody>
+</table>
 
-<p>
-  <strong>Name:</strong>
-  <%= @credit.name %>
-</p>
-
-<p>
-  <strong>Cost:</strong>
-  <%= @credit.cost %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @credit.status %>
-</p>
-
-<%= link_to 'Edit', edit_credit_path(@credit) %> |
-<%= link_to 'Back', credits_path %>
+<button class="btn-sm">
+  <%= link_to '수정', edit_credit_path(@credit) %>
+</button>
+<button class="btn-sm">
+  <%= link_to '뒤로', credits_path %>
+</button>
