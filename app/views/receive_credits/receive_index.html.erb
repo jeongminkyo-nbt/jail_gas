@@ -1,0 +1,82 @@
+<p id="notice"><%= notice %></p>
+
+<h1>수금관리</h1>
+<br>
+<div class="grid simple">
+  <div class="grid-body">
+    <div class="panel panel-primary">
+      <div class="panel-heading">검색</div>
+      <div class="panel-body">
+        <div class="col-md-3">
+          <%= form_tag receive_credits_path, method: :get, class: 'form-inline search-user-form' do %>
+            <div class="input-group align-center">
+              <%= text_field_tag 'search_value', nil, class: 'form-control', placeholder: '외상자 정보 검색' %>
+              <div class="input-group-btn">
+                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="col-md-6">
+          <%= form_tag receive_credits_path, method: :get do %>
+            <%= select_date Date.today, prefix: :start_date %>
+            ~ <%= select_date Date.today, prefix: :end_date %><%= submit_tag '검색' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <br>
+    <%= form_tag receive_credits_path do %>
+      <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+        <thead>
+        <tr>
+          <th class="h-align"><%= check_box_tag 'credits_checkall' %></th>
+          <th class="h-align">날짜</th>
+          <th class="h-align">외상자</th>
+          <th class="h-align">품목</th>
+          <th class="h-align">금액</th>
+          <th class="h-align">잔액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @credits.each do |credit| %>
+          <tr>
+            <td><%= check_box_tag 'credit_ids[]', credit.id %></td>
+            <td><%= credit.date %></td>
+            <td><%= credit.name %></td>
+            <td><%= credit.product_name %></td>
+            <td><%= number_with_delimiter(credit.cost) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <br>
+
+      </button>
+      <%= submit_tag '수금',class: 'btn-sm', name: 'return_credits' %>
+    <% end %>
+  </div>
+</div>
+<script>
+    $(document).ready(function () {
+        //최상단 체크박스 클릭
+        $("#credits_checkall").click(function () {
+            //클릭되었으면
+            if ($("#credits_checkall").prop("checked")) {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
+                $("input[id=credit_ids_]").prop("checked", true);
+
+                //클릭이 안되있으면
+            } else {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 false로 정의
+                $("input[id=credit_ids_]").prop("checked", false);
+            }
+        });
+        $(".dropdown-menu").find('li').first().addClass("active");
+        $(".dropdown").addClass("active");
+    })
+
+
+
+</script>

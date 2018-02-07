@@ -1,14 +1,30 @@
 class ReceiveCreditsController < ApplicationController
 
-  def index
-    @credits = Credit.where(status: 1)
+  def recent_index
+    page = params[:page].blank? ? 1 : params[:page]
+    params[:value] = 2
+    where_clause = Credit.make_where_clause(params)
+
+    @credits = Credit.find_credit_list(page, where_clause)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
-  def index_
-    @credits = Credit.where(status: nil)
+  def receive_index
+    page = params[:page].blank? ? 1 : params[:page]
+    params[:value] = 1
+    where_clause = Credit.make_where_clause(params)
+
+    @credits = Credit.find_credit_list(page, where_clause)
+
+    respond_to do |format|
+      format.html
+    end
   end
 
-  def return
+  def recent_return
     if params[:credit_ids].present?
       if params[:return_credits].present?
 
@@ -25,7 +41,7 @@ class ReceiveCreditsController < ApplicationController
     end
   end
 
-  def return_
+  def receive_return
     if params[:credit_ids].present?
       if params[:return_credits].present?
 

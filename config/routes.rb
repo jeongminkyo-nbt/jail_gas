@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
 
   controller :receive_credits do
-    get '/recent_credits' =>:index
-    post '/recent_credits' => :return
-    get '/receive_credits' => :index_
-    post '/receive_credits' => :return_
+    get '/recent_credits' =>:recent_index
+    post '/recent_credits' => :recent_return
+    get '/receive_credits' => :receive_index
+    post '/receive_credits' => :receive_return
   end
 
   resources :credits

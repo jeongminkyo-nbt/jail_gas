@@ -4,12 +4,21 @@ class CreditsController < ApplicationController
   # GET /credits
   # GET /credits.json
   def index
-    @credits = Credit.where(status: nil)
+    page = params[:page].blank? ? 1 : params[:page]
+    params[:value] = 1
+    where_clause = Credit.make_where_clause(params)
+
+    @credits = Credit.find_credit_list(page, where_clause)
+
+    respond_to do |format|
+     format.html
+    end
+
   end
 
   # GET /credits/1
   # GET /credits/1.json
-  def show
+  def showra
   end
 
   # GET /credits/new
