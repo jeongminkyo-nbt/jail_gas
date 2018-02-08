@@ -56,7 +56,7 @@ class Credit < ApplicationRecord
             *
           ')
         .where(where_clause)
-        .order(date: :desc)
+        .order(date: :desc).page(page).per(LIST_PER_PAGE)
   end
 
 
