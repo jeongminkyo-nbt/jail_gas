@@ -28,11 +28,11 @@ class ReceiveCreditsController < ApplicationController
   def recent_return
     if params[:credit_ids].present?
       if params[:return_credits].present?
-
         payment_ids = params[:credit_ids]
         payment_ids.each do |id|
           index = id.to_i
           pay = Credit.find_by(id: index)
+          authorize_action_for(pay)
           pay.update(status: nil)
         end
 
@@ -50,11 +50,11 @@ class ReceiveCreditsController < ApplicationController
   def receive_return
     if params[:credit_ids].present?
       if params[:return_credits].present?
-
         payment_ids = params[:credit_ids]
         payment_ids.each do |id|
           index = id.to_i
           pay = Credit.find_by(id: index)
+          authorize_action_for(pay)
           pay.update(status: 1)
         end
 
