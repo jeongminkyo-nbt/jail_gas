@@ -1,6 +1,11 @@
 class Credit < ApplicationRecord
   validates :name, :date, :cost,  presence: true
+  resourcify
+  include Authority::Abilities
 
+  def creatable_by?(user)
+    user.has_role? :admin
+  end
   LIST_PER_PAGE = 25
 
   def self.change_string_to_time(time_str)
