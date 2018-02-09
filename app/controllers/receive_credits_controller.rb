@@ -1,4 +1,5 @@
 class ReceiveCreditsController < ApplicationController
+  before_action :authenticate_user!, only: [:receive_index, :recent_index, :receive_return, :recent_return]
 
   def recent_index
     page = params[:page].blank? ? 1 : params[:page]

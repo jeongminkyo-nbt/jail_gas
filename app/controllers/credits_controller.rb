@@ -1,6 +1,6 @@
 class CreditsController < ApplicationController
   before_action :set_credit, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!, only: [:show, :index, :deti, :update, :destroy]
   # GET /credits
   # GET /credits.json
   def index
@@ -18,7 +18,7 @@ class CreditsController < ApplicationController
 
   # GET /credits/1
   # GET /credits/1.json
-  def showra
+  def show
   end
 
   # GET /credits/new

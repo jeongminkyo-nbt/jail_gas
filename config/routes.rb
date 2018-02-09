@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     post '/receive_credits' => :receive_return
   end
 
+  controller :config do
+    get '/config' => :index
+  end
   resources :credits
   root 'welcome#index'
 

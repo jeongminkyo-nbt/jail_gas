@@ -75,7 +75,8 @@
                 $("input[id=credit_ids_]").prop("checked", false);
             }
         });
-        $("ul li:nth-child(2)").addClass("active");
+        $(".dropdown-menu").find('li').eq(1).addClass("active");
+        $(".credit_dropdown").addClass("active");
     })
 
 
