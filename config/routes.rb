@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   controller :receive_credits do
     get '/recent_credits' =>:recent_index
     post '/recent_credits' => :recent_return

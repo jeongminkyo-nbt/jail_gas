@@ -27,20 +27,42 @@
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li><a href="/credits">외상관리</a></li>
-          <li class="dropdown">
+          <li class="dropdown credit_dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">수금관리<b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="/receive_credits">수금하기</a></li>
               <li><a href="/recent_credits">수금현황</a></li>
             </ul>
           </li>
+          <li><a href="#">창고현황</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">일일정산<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">정연혁</a></li>
+              <li><a href="#">최득섭</a></li>
+            </ul>
+          </li>
+          <li><a href="#"><span class="glyphicon glyphicon-cog"></span> 설정</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <% if user_signed_in? %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.email %> <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "내 정보", edit_user_registration_path %></li>
+                <li><%= link_to "로그아웃", destroy_user_session_path, method: :delete, data: { confirm: "로그아웃을 하시겠습니까?" } %></li>
+              </ul>
+            </li>
+          <% else %>
+            <li><%= link_to '로그인', new_user_session_path %></li>
+            <li><%= link_to '회원가입', new_user_registration_path %></li>
+          <% end %>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
   </div>
 
   <div class="container">
-
     <%= yield %>
 
   </div> <!-- /container -->
