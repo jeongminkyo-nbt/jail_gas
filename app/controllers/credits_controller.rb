@@ -1,5 +1,6 @@
 class CreditsController < ApplicationController
   before_action :set_credit, only: [:show, :edit, :update, :destroy]
+  before_action :set_auth, only: [:edit, :new]
   before_action :authenticate_user!, only: [:show, :index, :edit, :update, :destroy]
   # GET /credits
   # GET /credits.json
@@ -23,7 +24,7 @@ class CreditsController < ApplicationController
 
   # GET /credits/new
   def new
-    @credit = Credit.new
+
   end
 
   # GET /credits/1/edit
@@ -33,9 +34,8 @@ class CreditsController < ApplicationController
   # POST /credits
   # POST /credits.json
   def create
-
     @credit = Credit.new(credit_params)
-    authorize_action_for @credit
+
     respond_to do |format|
       if @credit.save
         format.html { redirect_to credits_url, notice: '외상목록이 성공적으로 생성되었습니다.' }
@@ -48,7 +48,6 @@ class CreditsController < ApplicationController
   # PATCH/PUT /credits/1
   # PATCH/PUT /credits/1.json
   def update
-    authorize_action_for @credit
     respond_to do |format|
       if @credit.update(credit_params)
         format.html { redirect_to @credit, notice: '외상장부가 성공적으로 수정되었습니다.' }
@@ -88,6 +87,16 @@ class CreditsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_credit
       @credit = Credit.find(params[:id])
+    end
+
+    def set_auth
+      if params[:id].present?
+        @credit = Credit.find(params[:id])
+        authorize_action_for @credit
+      else
+        @credit = Credit.new
+        authorize_action_for @credit
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
