@@ -59,8 +59,12 @@
 
       <br>
 
-      </button>
       <%= submit_tag '복구',class: 'btn-sm', name: 'return_credits' %>
+      <div class="col-md-12">
+        <div style="margin-top: 8px; text-align: center; ">
+          <%= paginate @credits %>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>

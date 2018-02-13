@@ -8,3 +8,5 @@
 
 admin_user = User.create( email: 'admin@email.com', password: 'tlsrnd13!@', confirmed_at: Time.now )
 admin_user.add_role :admin
+
+Config.create( gas_10kg: 0, gas_20kg: 0, gas_50kg: 0, air: 0, butane: 0, argon: 0)

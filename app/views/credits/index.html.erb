@@ -72,13 +72,17 @@
         <% end %>
       </tbody>
     </table>
-
       <br>
-
-      <button class="btn-sm">
-        <%= link_to '추가', new_credit_path %>
-      </button>
+    <button class="btn-sm">
+      <%= link_to '추가', new_credit_path %>
+    </button>
+    <div class="col-md-12">
+      <div style="margin-top: 8px; text-align: center; ">
+        <%= paginate @credits %>
+      </div>
+    </div>
   </div>
+
 </div>
 <script>
     $(document).ready(function(){

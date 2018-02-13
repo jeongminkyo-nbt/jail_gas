@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   controller :config do
     get '/config' => :index
+    get '/config/new' => :new, :as => 'edit_config'
+    post '/config' => :update
   end
   resources :credits
   root 'welcome#index'
