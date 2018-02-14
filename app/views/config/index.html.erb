@@ -41,12 +41,16 @@
             <td>아르곤</td>
             <td><%= number_with_delimiter(@config.argon) %></td>
           </tr>
+          <tr>
+            <td>변경 날짜</td>
+            <td><%= @config.updated_at%></td>
+          </tr>
         </tbody>
       </table>
 
       <br>
           <button class="btn-sm">
-            <%= link_to '수정', edit_config_path(@config)%>
+            <%= link_to '수정', edit_config_path %>
           </button>
   </div>
 </div>

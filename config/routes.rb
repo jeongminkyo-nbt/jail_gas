@@ -9,9 +9,9 @@ Rails.application.routes.draw do
   end
 
   controller :config do
-    get '/config' => :index
-    get '/config/new' => :new, :as => 'edit_config'
-    post '/config' => :update
+    get '/configs' => :index
+    get '/configs/edit' => :edit, :as => 'edit_config'
+    post '/configs/edit' => :update
   end
   resources :credits
   root 'welcome#index'
