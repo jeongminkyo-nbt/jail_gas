@@ -1,0 +1,48 @@
+<%= form_for(@delivary) do |f| %>
+  <% if @delivary.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@delivary.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+        <% @delivary.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
+    <tr>
+      <th class="h-align">날짜</th>
+      <th class="h-align">배달지</th>
+      <th class="h-align">품목</th>
+      <th class="h-align">배달자</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><%= f.text_field :date %></td>
+      <td><%= f.text_field :name %></td>
+      <td><%= f.text_field :product_name %></td>
+      <td><%= f.select :deliver, options_for_select(['정연혁', '최득섭'], '정연혁') %></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <br>
+
+  <%= f.button :submit, class: 'btn-sm'%>
+
+
+  <button class="btn-sm">
+    <%= link_to 'Back', :back %>
+  </button>
+<% end %>
+
+<script>
+    $(function() {
+        $( "#delivary_date" ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+</script>

@@ -1,0 +1,9 @@
+<h1>배달장부 수정</h1>
+<% flash.each do |type, message| %>
+  <div class="alert <%= bootstrap_class_for(type) %> alert-dismissable fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="notice"><%= message %></p>
+  </div>
+<% end %>
+<%= render 'form', delivary: @delivary %>
+
