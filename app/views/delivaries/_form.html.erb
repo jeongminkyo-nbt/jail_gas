@@ -16,6 +16,7 @@
       <th class="h-align">날짜</th>
       <th class="h-align">배달지</th>
       <th class="h-align">품목</th>
+      <th class="h-align">수량</th>
       <th class="h-align">배달자</th>
     </tr>
     </thead>
@@ -23,7 +24,8 @@
     <tr>
       <td><%= f.text_field :date %></td>
       <td><%= f.text_field :name %></td>
-      <td><%= f.text_field :product_name %></td>
+      <td><%= f.select :product_name, options_for_select(['10kg', '20kg', '50kg', '산소', '아르곤', '부탄'], '20kg') %></td>
+      <td><%= f.select :product_num, options_for_select(['1','2','3','4','5','6'], '1') %></td>
       <td><%= f.select :deliver, options_for_select(['정연혁', '최득섭'], '정연혁') %></td>
     </tr>
     </tbody>

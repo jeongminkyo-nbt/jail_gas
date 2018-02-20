@@ -9,6 +9,10 @@ Rails.application.routes.draw do
     post '/receive_credits' => :receive_return
   end
 
+  controller :daily_closing do
+    get '/daily_closing/1' => :index
+    get '/daily_closing/2' => :closing
+  end
   controller :config do
     get '/configs' => :index
     get '/configs/edit' => :edit, :as => 'edit_config'

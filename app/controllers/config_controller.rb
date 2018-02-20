@@ -1,6 +1,6 @@
 class ConfigController < ApplicationController
-
   before_action :authenticate_user!, only: [:index]
+
   def index
     @config = Config.first
     respond_to do |format|
@@ -10,6 +10,7 @@ class ConfigController < ApplicationController
 
   def edit
     @config = Config.first
+    authorize_action_for @config
   end
   def update
     @config = Config.first
