@@ -12,6 +12,7 @@ class ConfigController < ApplicationController
     @config = Config.first
     authorize_action_for @config
   end
+
   def update
     @config = Config.first
 

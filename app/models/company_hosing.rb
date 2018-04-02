@@ -1,0 +1,2 @@
+class CompanyHosing < ApplicationRecord
+end

@@ -18,6 +18,12 @@ Rails.application.routes.draw do
     get '/configs/edit' => :edit, :as => 'edit_config'
     post '/configs/edit' => :update
   end
+
+  controller :company_hosing do
+    get '/company_housing' => :company_hosing
+    get '/company_housing/edit' => :edit, :as => 'edit_company_housing'
+  end
+
   resources :credits
   root 'welcome#index'
 

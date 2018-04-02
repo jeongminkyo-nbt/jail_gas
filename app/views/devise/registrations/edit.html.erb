@@ -4,15 +4,15 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :email, required: true, autofocus: true %>
+    <%= f.input :email, required: true, autofocus: true ,readonly: true%>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
       <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
     <% end %>
-
+    <%= f.input :current_password, hint: "비밀번호 변경을 하기 위해서는 필수입니다.", required: true %>
     <%= f.input :password, autocomplete: "off", hint: "변경을 원하지 않으면 빈칸으로 남기세요", required: false %>
     <%= f.input :password_confirmation, required: false %>
-    <%= f.input :current_password, hint: "비밀번호 변경을 하기 위해서는 필수입니다.", required: true %>
+
   </div>
 
   <%= f.button :submit, "수정" %>
