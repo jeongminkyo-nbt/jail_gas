@@ -11,14 +11,15 @@
     <th class="h-align">날짜</th>
     <th class="h-align">외상자</th>
     <th class="h-align">품목</th>
+    <th class="h-align">수량</th>
     <th class="h-align">금액</th>
-    <th class="h-align">잔액</th>
   </tr>
   </thead>
   <tbody>
       <td><%= @credit.date %></td>
       <td><%= @credit.name %></td>
       <td><%= @credit.product_name %></td>
+      <td><%= @credit.product_num %></td>
       <td><%= number_with_delimiter(@credit.cost) %></td>
     </tr>
   </tbody>

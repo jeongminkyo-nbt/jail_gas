@@ -30,9 +30,10 @@ class DelivariesController < ApplicationController
   # POST /delivaries.json
   def create
     @delivary = Delivary.new(delivary_params)
+    @delivary.status = 0
     respond_to do |format|
       if @delivary.save()
-        format.html { redirect_to @delivary, notice: '배달장부가 성공적으로 생성되었습니다.' }
+        format.html { redirect_to delivaries_path, notice: '배달장부가 성공적으로 생성되었습니다.' }
       else
         format.html { render :new }
       end

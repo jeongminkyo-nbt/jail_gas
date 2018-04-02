@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180215071847) do
+ActiveRecord::Schema.define(version: 20180224155110) do
 
   create_table "configs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "gas_10kg"
@@ -32,7 +32,22 @@ ActiveRecord::Schema.define(version: 20180215071847) do
     t.datetime "updated_at",                null: false
     t.string   "product_name", default: ""
     t.integer  "user_id"
+    t.integer  "product_num"
     t.index ["user_id"], name: "index_credits_on_user_id", using: :btree
+  end
+
+  create_table "daily_closings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "daily_closings_delivaries", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "daily_closings_id"
+    t.integer "delivaries_id"
+    t.index ["daily_closings_id", "delivaries_id"], name: "daily_closings_delivaries_index", using: :btree
+    t.index ["daily_closings_id"], name: "index_daily_closings_delivaries_on_daily_closings_id", using: :btree
+    t.index ["delivaries_id"], name: "index_daily_closings_delivaries_on_delivaries_id", using: :btree
   end
 
   create_table "delivaries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -43,6 +58,7 @@ ActiveRecord::Schema.define(version: 20180215071847) do
     t.datetime "updated_at",   null: false
     t.string   "product_name"
     t.integer  "product_num"
+    t.boolean  "status"
   end
 
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

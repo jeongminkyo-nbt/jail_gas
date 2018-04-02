@@ -3,6 +3,8 @@ class Delivary < ApplicationRecord
   resourcify
   include Authority::Abilities
 
+  has_and_belongs_to_many :daily_closings
+
   LIST_PER_PAGE = 25
 
   def self.change_string_to_time(time_str)
