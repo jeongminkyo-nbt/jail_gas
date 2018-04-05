@@ -4,7 +4,7 @@
     <p class="notice"><%= message %></p>
   </div>
 <% end %>
-<h1>수금관리</h1>
+<h1>사택 검침장부</h1>
 <br>
 <div class="grid simple">
   <div class="grid-body">
@@ -22,7 +22,8 @@
       </div>
     <div class="grid-body">
       <br>
-      <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+      <h3><%= @select_dong %>동</h3>
+      <table class="table table-hover no-more-tables" id="addTable" style="margin-top: 20px;">
         <thead>
           <tr>
             <th class="h-align">동</th>
@@ -37,7 +38,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr class="temp">
             <% @company_housing.each do |row| %>
               <td><%= row.dong %></td>
               <td><%= row.ho %></td>
@@ -48,12 +49,13 @@
               <td><%= number_with_delimiter(row.usage) %></td>
               <td><%= number_with_delimiter(row.share) %></td>
               <td><%= number_with_delimiter(row.usage_money) %></td>
-            <% end %>
           </tr>
+            <% end %>
         </tbody>
       </table>
 
       <br>
+
       <button class="btn-sm">
         <%= link_to '수정', edit_company_housing_path %>
       </button>
@@ -63,6 +65,7 @@
 
 <script>
     $(document).ready(function () {
-        $(".compnay_hosing").addClass("active");
+        $(".company_housing").addClass("active");
+        $(".com_hou").find('li').first().addClass("active");
     })
 </script>

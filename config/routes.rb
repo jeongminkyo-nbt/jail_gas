@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   controller :company_hosing do
     get '/company_housing' => :company_hosing
     get '/company_housing/edit' => :edit, :as => 'edit_company_housing'
+    post '/company_housing/edit/set_update' => :set_update
   end
 
   resources :credits

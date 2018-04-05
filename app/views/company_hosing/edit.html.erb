@@ -22,47 +22,50 @@
     </div>
     <div class="grid-body">
       <br>
-      <table class="table table-hover no-more-tables" style="margin-top: 20px;">
-        <thead>
-        <tr>
-          <th class="h-align">동</th>
-          <th class="h-align">호수</th>
-          <th class="h-align">이름</th>
-          <th class="h-align">전화번호</th>
-          <th class="h-align">전월검침</th>
-          <th class="h-align">당월검침</th>
-          <th class="h-align">사용량</th>
-          <th class="h-align">가스,기화기 부담금</th>
-          <th class="h-align">사용금</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <% @company_housing.each do |row| %>
-            <td><%= row.dong %></td>
-            <td><%= row.ho %></td>
-            <td><%= row.name %></td>
-            <td><%= row.call %></td>
-            <td><%= number_with_delimiter(row.prev_month) %></td>
-            <td><%= number_with_delimiter(row.current_month) %></td>
-            <td><%= number_with_delimiter(row.usage) %></td>
-            <td><%= number_with_delimiter(row.share) %></td>
-            <td><%= number_with_delimiter(row.usage_money) %></td>
-          <% end %>
-        </tr>
-        </tbody>
-      </table>
-
-      <br>
-      <button class="btn-sm">
-        <%= link_to '수정', edit_company_housing_path %>
-      </button>
+      <%= form_tag company_housing_edit_set_update_path, method: :post, class: 'form-inline search-user-form' do %>
+        <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+          <thead>
+          <tr>
+            <th class="h-align">동</th>
+            <th class="h-align">호수</th>
+            <th class="h-align">이름</th>
+            <th class="h-align">전화번호</th>
+            <th class="h-align">전월검침</th>
+            <th class="h-align">당월검침</th>
+            <th class="h-align">사용량</th>
+            <th class="h-align">가스,기화기 부담금</th>
+            <th class="h-align">사용금</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <% @company_housing.each do |row| %>
+              <td><%= row.dong %></td>
+              <td><%= row.ho %></td>
+              <td><%= row.name %></td>
+              <td><%= row.call %></td>
+              <td><%= number_with_delimiter(row.current_month) %></td>
+              <td><input type="text" value="<%= row.current_month %>" class="form-control" placeholder="당월검침" style="width:60px" name="id[<%=row.id%>]"></td>
+              <td><%= number_with_delimiter(row.usage) %></td>
+              <td><%= number_with_delimiter(row.share) %></td>
+              <td><%= number_with_delimiter(row.usage_money) %></td>
+          </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <br>
+        <button class="btn-sm">
+          <%= link_to '저장', company_housing_path %>
+        </button>
+        <button class="btn-sm" type="submit">적용</button>
+      <% end %>
     </div>
   </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $(".compnay_hosing").addClass("active");
-    })
+  $(document).ready(function () {
+    $(".company_housing").addClass("active");
+      $(".com_hou").find('li').last().addClass("active");
+  })
 </script>
