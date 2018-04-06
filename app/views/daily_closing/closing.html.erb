@@ -5,35 +5,6 @@
   <button class="btn btn-default" type="submit">검색</button>
 <% end %>
 
-<h3>배달 목록</h3>
-<%= form_tag daily_closing_path(:deliver => params[:deliver]), method: :post, class: 'form-inline' do %>
-  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
-    <thead>
-    <tr>
-      <th class="h-align"><%= check_box_tag 'delivaries_checkall' %></th>
-      <th class="h-align">날짜</th>
-      <th class="h-align">배달지</th>
-      <th class="h-align">품목</th>
-      <th class="h-align">수량</th>
-    </tr>
-    </thead>
-    <tbody>
-      <% @delivary.each do |delivary| %>
-        <tr>
-          <td><%= check_box_tag 'delivary_ids[]', delivary.id %></td>
-          <td><%= delivary.date %></td>
-          <td><%= delivary.name %></td>
-          <td><%= delivary.product_name %></td>
-          <td><%= delivary.product_num %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <div style="height :10px; margin-bottom: 5%;">
-    <button class="btn-sm" type="submit" style="float : right">확인</button>
-  </div>
-<% end %>
-
 <h3>추가 배달지</h3>
 <%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
@@ -59,8 +30,38 @@
   </div>
 <% end %>
 
+<h3>배달 목록</h3>
+<%= form_tag daily_closing_path(:deliver => params[:deliver]), method: :post, class: 'form-inline' do %>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
+    <tr>
+      <th class="h-align"><%= check_box_tag 'delivaries_checkall' %></th>
+      <th class="h-align">날짜</th>
+      <th class="h-align">배달지</th>
+      <th class="h-align">품목</th>
+      <th class="h-align">수량</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% @delivary.each do |delivary| %>
+        <tr>
+          <td><%= check_box_tag 'delivary_ids[]', delivary.id %></td>
+          <td><%= delivary.date %></td>
+          <td><%= delivary.name %></td>
+          <td><%= delivary.product_name %></td>
+          <td><%= delivary.product_num %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div style="height :10px; margin-bottom: 5%;">
+    <button class="btn-sm" type="submit" style="float : right; margin : 5px">복구</button>
+    <button class="btn-sm" type="submit" style="float : right; margin : 5px">확인</button>
+  </div>
+<% end %>
+
 <h3>외상 체크</h3>
-<%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
+<%= form_tag daily_closing_add_credit_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>
     <tr>
@@ -84,10 +85,60 @@
     </tbody>
   </table>
   <div style="height :10px; margin-bottom: 5%;">
-    <button class="btn-sm" type="submit" style="float : right">확인</button>
+    <button class="btn-sm" type="submit" style="float : right; margin : 5px">복구</button>
+    <button class="btn-sm" type="submit" style="float : right; margin : 5px">확인</button>
   </div>
 <% end %>
 
+<h3>외상 목록</h3>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
+    <tr>
+      <th class="h-align">날짜</th>
+      <th class="h-align">배달지</th>
+      <th class="h-align">품목</th>
+      <th class="h-align">수량</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @credit_delivary.each do |delivary| %>
+      <tr>
+        <td><%= delivary.date %></td>
+        <td><%= delivary.name %></td>
+        <td><%= delivary.product_name %></td>
+        <td><%= delivary.product_num %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <div style="height :10px; margin-bottom: 5%;">
+  </div>
+
+<h3>배달 완료 목록</h3>
+<table class="table table-hover no-more-tables" style="margin-top: 20px;">
+  <thead>
+  <tr>
+    <th class="h-align">날짜</th>
+    <th class="h-align">배달지</th>
+    <th class="h-align">품목</th>
+    <th class="h-align">수량</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @check_delivary.each do |delivary| %>
+    <tr>
+      <td><%= delivary.date %></td>
+      <td><%= delivary.name %></td>
+      <td><%= delivary.product_name %></td>
+      <td><%= delivary.product_num %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<div style="height :10px; margin-bottom: 5%;">
+</div>
+
+<h3>총 금액</h3>
 
 <script>
     $(document).ready(function () {
