@@ -10,7 +10,7 @@
   <div class="grid-body">
     <div class="panel-body">
       <div class="col-md-3">
-        <%= form_tag company_housing_path, method: :get, class: 'form-inline search-user-form' do %>
+        <%= form_tag edit_company_housing_path, method: :get, class: 'form-inline search-user-form' do %>
           <div class="input-group align-center" style="width: 100%">
             <%= select_tag(:select_dong, options_for_select(['101동', '102동', '103동', '104동'] ), {:class => 'form-control'})  %>
             <div class="input-group-btn">
@@ -45,7 +45,7 @@
               <td><%= row.name %></td>
               <td><%= row.call %></td>
               <td><%= number_with_delimiter(row.current_month) %></td>
-              <td><input type="text" value="<%= row.current_month %>" class="form-control" placeholder="당월검침" style="width:60px" name="id[<%=row.id%>]"></td>
+              <td><input type="text" class="form-control" style="width:60px" name="id[<%=row.id%>]"></td>
               <td><%= number_with_delimiter(row.usage) %></td>
               <td><%= number_with_delimiter(row.share) %></td>
               <td><%= number_with_delimiter(row.usage_money) %></td>
@@ -54,10 +54,10 @@
           </tbody>
         </table>
         <br>
-        <button class="btn-sm">
-          <%= link_to '저장', company_housing_path %>
-        </button>
         <button class="btn-sm" type="submit">적용</button>
+        <button class="btn-sm">
+          <%= link_to '뒤로', company_housing_path %>
+        </button>
       <% end %>
     </div>
   </div>

@@ -9,4 +9,11 @@
 admin_user = User.create( email: 'admin@email.com', password: 'tlsrnd13!@', confirmed_at: Time.now )
 admin_user.add_role :admin
 
-Config.create( gas_10kg: 0, gas_20kg: 0, gas_50kg: 0, air: 0, butane: 0, argon: 0)
+Config.create( product_name: '10kg', cost: 0)
+Config.create( product_name: '20kg', cost: 0)
+Config.create( product_name: '50kg', cost: 0)
+Config.create( product_name: 'air', cost: 0)
+Config.create( product_name: 'butane', cost: 0)
+Config.create( product_name: 'argon', cost: 0)
+Config.create( product_name: 'share', cost: 0)
+Config.create( product_name: 'per_money', cost: 0)

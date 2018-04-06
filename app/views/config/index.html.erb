@@ -17,45 +17,18 @@
         </tr>
         </thead>
         <tbody>
+        <% @config.each do |config| %>
           <tr>
-            <td>10kg</td>
-            <td><%= number_with_delimiter(@config.gas_10kg) %></td>
+            <td><%= change_name(config.id) %></td>
+            <td><%=number_with_delimiter(config.cost) %></td>
           </tr>
-          <tr>
-            <td>20kg</td>
-            <td><%= number_with_delimiter(@config.gas_20kg) %></td>
-          </tr>
-          <tr>
-            <td>50kg</td>
-            <td><%= number_with_delimiter(@config.gas_50kg) %></td>
-          </tr>
-          <tr>
-            <td>산소</td>
-            <td><%= number_with_delimiter(@config.air) %></td>
-          </tr>
-          <tr>
-            <td>부탄</td>
-            <td><%= number_with_delimiter(@config.butane) %></td>
-          </tr>
-          <tr>
-            <td>아르곤</td>
-            <td><%= number_with_delimiter(@config.argon) %></td>
-          </tr>
-          <tr>
-            <td>가스 기화기 부담금</td>
-            <td><%= number_with_delimiter(@config.share) %></td>
-          </tr>
-          <tr>
-            <td>사택 단가</td>
-            <td><%= number_with_delimiter(@config.per_money) %></td>
-          </tr>
+        <% end %>
           <tr>
             <td>변경 날짜</td>
-            <td><%= @config.updated_at%></td>
+            <td><%= @config.first.updated_at%></td>
           </tr>
         </tbody>
       </table>
-
       <br>
           <button class="btn-sm">
             <%= link_to '수정', edit_config_path %>

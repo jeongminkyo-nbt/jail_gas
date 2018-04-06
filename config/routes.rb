@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   end
 
   controller :daily_closing do
-    get '/daily_closing/1' => :index
-    get '/daily_closing/2' => :closing
+    get '/daily_closing' => :closing
+    post '/daily_closing' => :update_delivary
+    post '/daily_closing/add_delivary' => :add_delivary
   end
   controller :config do
     get '/configs' => :index
@@ -23,6 +24,8 @@ Rails.application.routes.draw do
     get '/company_housing' => :company_hosing
     get '/company_housing/edit' => :edit, :as => 'edit_company_housing'
     post '/company_housing/edit/set_update' => :set_update
+    get '/company_housing/add_people' => :add_people
+    post '/company_housing' => :update_people, :as => 'update_people'
   end
 
   resources :credits

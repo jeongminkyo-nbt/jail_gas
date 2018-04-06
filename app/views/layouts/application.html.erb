@@ -39,8 +39,8 @@
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">일일정산<b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="/daily_closing/1">정연혁</a></li>
-              <li><a href="/daily_closing/2">최득섭</a></li>
+              <li><%= link_to "정연혁", daily_closing_path(:deliver => '정연혁' ) %></li>
+              <li><%= link_to "최득섭", daily_closing_path(:deliver => '최득섭' ) %></li>
             </ul>
           </li>
           <li class="dropdown company_housing">
