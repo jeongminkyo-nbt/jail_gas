@@ -6,7 +6,7 @@
 <% end %>
 
 <h3>추가 배달지</h3>
-<%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
+<%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver]), method: :post, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>
     <tr>
@@ -31,7 +31,7 @@
 <% end %>
 
 <h3>배달 목록</h3>
-<%= form_tag daily_closing_path(:deliver => params[:deliver]), method: :post, class: 'form-inline' do %>
+<%= form_tag daily_closing_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>
     <tr>
@@ -55,8 +55,8 @@
     </tbody>
   </table>
   <div style="height :10px; margin-bottom: 5%;">
-    <button class="btn-sm" type="submit" style="float : right; margin : 5px">복구</button>
-    <button class="btn-sm" type="submit" style="float : right; margin : 5px">확인</button>
+    <button class="btn-sm" type="submit" name="" value="" style="float : right; margin : 5px">복구</button>
+    <button class="btn-sm" type="submit" name="" value="" style="float : right; margin : 5px">확인</button>
   </div>
 <% end %>
 
@@ -85,8 +85,8 @@
     </tbody>
   </table>
   <div style="height :10px; margin-bottom: 5%;">
-    <button class="btn-sm" type="submit" style="float : right; margin : 5px">복구</button>
-    <button class="btn-sm" type="submit" style="float : right; margin : 5px">확인</button>
+    <button class="btn-sm" type="submit" name="" value="" style="float : right; margin : 5px">복구</button>
+    <button class="btn-sm" type="submit" name="" value="" style="float : right; margin : 5px">확인</button>
   </div>
 <% end %>
 
