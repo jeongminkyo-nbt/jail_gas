@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   controller :company_hosing do
     get '/company_housing' => :company_hosing
     get '/company_housing/edit' => :edit, :as => 'edit_company_housing'
+    get '/company_housing/update/:id' => :edit_people, :as =>'edit_people'
+    post '/company_housing/update' => :apply_edit_people
     post '/company_housing/edit/set_update' => :set_update
     get '/company_housing/add_people' => :add_people
     post '/company_housing' => :update_people, :as => 'update_people'

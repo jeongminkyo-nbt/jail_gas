@@ -29,6 +29,31 @@ class CompanyHosingController < ApplicationController
     
   end
 
+  def edit_people
+    @company_housing = CompanyHosing.find_by_id(params[:id])
+  end
+
+  def apply_edit_people
+    dong = params[:dong]
+    ho = params[:ho]
+    name = params[:name]
+    call = params[:call]
+    prev_month = params[:prev_month]
+    current_month = params[:current_month]
+    usage = current_month.to_i - prev_month.to_i
+    share = SHARE
+    usage_money = usage * PER_MONEY + SHARE
+    company_housing = CompanyHosing.find_by_id(params[:id])
+
+    respond_to do |format|
+      begin company_housing.update_attributes!(:dong => dong, :ho => ho, :name => name, :call => call, :prev_month => prev_month, :current_month => current_month, :usage => usage, :share => share, :usage_money => usage_money)
+      format.html { redirect_to company_housing_url, notice: '인원수정이 성공적으로 수행되었습니다.' }
+      rescue
+        format.html { redirect_to :back,  :flash => { :error => '오류가 발생했습니다.' } }
+      end
+    end
+  end
+
   # :TODO 업데이트 중 하나라도 에러가 나면 다 업데이트가 되지 않게 한다. model과 같이 봐야함
   def set_update
     params[:id].map do |row|
