@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     get '/daily_closing' => :closing
     post '/daily_closing' => :update_delivary
     post '/daily_closing/add_delivary' => :add_delivary
-    post '/daily_closing/add_credit' => :add_credit
+    post '/daily_closing/update_credit' => :update_credit
   end
   controller :config do
     get '/configs' => :index
