@@ -31,7 +31,7 @@
 <% end %>
 
 <h3>배달 목록</h3>
-<%= form_tag daily_closing_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
+<%= form_tag daily_closing_update_delivary_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>
     <tr>
@@ -130,7 +130,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @check_delivary.each do |delivary| %>
+  <% @done_delivary.each do |delivary| %>
     <tr>
       <td><%= delivary.date %></td>
       <td><%= delivary.name %></td>
@@ -144,6 +144,31 @@
 </div>
 
 <h3>총 금액</h3>
+<%= form_tag daily_closing_update_credit_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
+    <tr>
+      <th class="h-align">품목</th>
+      <th class="h-align">판매 수량</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @all_delivary.each do |delivary| %>
+      <tr>
+        <td><%= change_product_name(delivary.product_name) %></td>
+        <td><%= delivary.product_num_all %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td>총 금액</td>
+      <td><%= number_with_delimiter(@total_cost) %></td>
+    </tr>
+    </tbody>
+  </table>
+  <div style="height :10px; margin-bottom: 5%;">
+    <button class="btn-sm" type="submit" style="float : right; margin : 5px">제출</button>
+  </div>
+<% end %>
 
 <script>
     $(document).ready(function () {

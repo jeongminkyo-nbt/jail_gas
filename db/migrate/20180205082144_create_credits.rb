@@ -5,7 +5,8 @@ class CreateCredits < ActiveRecord::Migration[5.0]
       t.string :name
       t.integer :cost
       t.integer :status
-
+      t.string :product_name, default: ''
+      t.integer :product_num
       t.timestamps
     end
   end

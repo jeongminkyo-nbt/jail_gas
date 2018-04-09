@@ -4,7 +4,9 @@ class CreateDelivaries < ActiveRecord::Migration[5.0]
       t.string :date
       t.string :name
       t.string :deliver
-
+      t.string :product_name
+      t.integer :product_num
+      t.integer :status
       t.timestamps
     end
   end

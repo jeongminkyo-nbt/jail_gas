@@ -3,8 +3,6 @@ class Delivary < ApplicationRecord
   resourcify
   include Authority::Abilities
 
-  has_and_belongs_to_many :daily_closings
-
   LIST_PER_PAGE = 25
 
   def self.change_string_to_time(time_str)
@@ -45,5 +43,10 @@ class Delivary < ApplicationRecord
         .order(date: :desc).page(page).per(LIST_PER_PAGE)
   end
 
-
+  def self.get_total_all(deliver)
+    Delivary
+        .select('product_name,sum(product_num) as product_num_all')
+        .where('deliver = ? and status = ? or status = ?', deliver, 1, 2)
+        .group('product_name')
+  end
 end

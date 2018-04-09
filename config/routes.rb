@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   controller :daily_closing do
     get '/daily_closing' => :closing
-    post '/daily_closing' => :update_delivary
+    post '/daily_closing/update_delivary' => :update_delivary
     post '/daily_closing/add_delivary' => :add_delivary
     post '/daily_closing/update_credit' => :update_credit
   end

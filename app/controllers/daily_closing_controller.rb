@@ -2,15 +2,29 @@ class DailyClosingController < ApplicationController
 
   module Status
     Delivary_ready = 0
-    Delivary_done = 1
-    Delivary_checking = 2
-    Delivary_credit = 3
+    Delivary_checking = 1
+    Delivary_credit = 2
+    Delivary_done = 3
   end
 
   def closing
     @delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 0)
-    @check_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
-    @credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 3)
+    @check_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 1)
+    @credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
+    @done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], 1, 2)
+    @all_delivary = Delivary.get_total_all(params[:deliver])
+
+    @total_cost = 0
+    @all_delivary.each do |delivary|
+      if delivary.product_name == '아르곤'
+        delivary.product_name = 'argon'
+      elsif delivary.product_name == '산소'
+        delivary.product_name = 'air'
+      elsif delivary.product_name == '부탄'
+        delivary.product_name = 'butane'
+      end
+      @total_cost += delivary.product_num_all.to_i * Config.where('product_name = ?',delivary.product_name).first.cost.to_i
+    end
 
     if params[:daily_closing_date].nil?
 
@@ -90,14 +104,8 @@ class DailyClosingController < ApplicationController
         credits_ids.each do |credit|
           index = credit.to_i
           delivary = Delivary.find_by(id: index)
-          date = delivary.date
-          name = delivary.name
-          cost = Config.where('product_name = ?',delivary.product_name).first.cost * delivary.product_num
-          product_name = delivary.product_name
-          product_num = delivary.product_num
-          @add_credit = Credit.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :cost => cost, :status => status)
           delivary.update(status: Status::Delivary_credit)
-          @add_credit.save
+
         end
       end
     end
