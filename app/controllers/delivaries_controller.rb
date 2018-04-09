@@ -31,7 +31,6 @@ class DelivariesController < ApplicationController
   def create
     @delivary = Delivary.new(delivary_params)
     @delivary.status = 0
-    @delivary.daily_closing_id = -1
     respond_to do |format|
       if @delivary.save()
         format.html { redirect_to delivaries_path, notice: '배달장부가 성공적으로 생성되었습니다.' }

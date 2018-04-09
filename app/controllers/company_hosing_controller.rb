@@ -41,8 +41,8 @@ class CompanyHosingController < ApplicationController
     prev_month = params[:prev_month]
     current_month = params[:current_month]
     usage = current_month.to_i - prev_month.to_i
-    share = SHARE
-    usage_money = usage * PER_MONEY + SHARE
+    share = SHARE.to_i
+    usage_money = usage * PER_MONEY.to_i + SHARE.to_i
     company_housing = CompanyHosing.find_by_id(params[:id])
 
     respond_to do |format|
@@ -61,9 +61,9 @@ class CompanyHosingController < ApplicationController
       current_month = row[1]
       prev_month = company_hosing.current_month.to_i
       current_usage = current_month.to_i - prev_month
-      current_usage_money = current_usage * PER_MONEY + SHARE
+      current_usage_money = current_usage * PER_MONEY.to_i + SHARE.to_i
       if current_month.present?
-        company_hosing.update_attributes!(:usage => current_usage.to_i, :usage_money => current_usage_money.to_i, :prev_month => prev_month, :current_month => current_month, :share => SHARE)
+        company_hosing.update_attributes!(:usage => current_usage.to_i, :usage_money => current_usage_money.to_i, :prev_month => prev_month, :current_month => current_month, :share => SHARE.to_i)
         end
       end
 
@@ -94,8 +94,8 @@ class CompanyHosingController < ApplicationController
     prev_month = params[:prev_month]
     current_month = params[:current_month]
     usage = current_month.to_i - prev_month.to_i
-    share = SHARE
-    usage_money = usage * PER_MONEY + SHARE
+    share = SHARE.to_i
+    usage_money = usage * PER_MONEY.to_i + SHARE.to_i
     @company_housing = CompanyHosing.new(:dong => dong, :ho => ho, :name => name, :call => call, :prev_month => prev_month, :current_month => current_month, :usage => usage, :share => share, :usage_money => usage_money)
 
     respond_to do |format|

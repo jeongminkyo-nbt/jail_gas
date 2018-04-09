@@ -2,7 +2,6 @@ class Delivary < ApplicationRecord
   validates :name, :date, presence: true
   resourcify
   include Authority::Abilities
-  belongs_to :daily_closing
   LIST_PER_PAGE = 25
 
   def self.change_string_to_time(time_str)
@@ -46,7 +45,7 @@ class Delivary < ApplicationRecord
   def self.get_total_all(deliver)
     Delivary
         .select('product_name,sum(product_num) as product_num_all')
-        .where('deliver = ? and status = ? or status = ?', deliver, 1, 2)
+        .where('deliver = ? and status = ?', deliver, 1)
         .group('product_name')
   end
 end

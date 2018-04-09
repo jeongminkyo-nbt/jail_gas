@@ -16,7 +16,50 @@ class DailyClosingController < ApplicationController
 
   def show
     @delivary = DailyClosing.find_by_id(params[:id]).delivaries
+    @credit = DailyClosing.find_by_id(params[:id]).credits
+  end
 
+  def create
+    credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
+    done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], 1, 2)
+    cost_delivary = Delivary.get_total_all(params[:deliver])
+    date = params[:report_date]
+    deliver = params[:deliver]
+    total_cost = 0
+    cost_delivary.each do |delivary|
+      if delivary.product_name == '아르곤'
+        delivary.product_name = 'argon'
+      elsif delivary.product_name == '산소'
+        delivary.product_name = 'air'
+      elsif delivary.product_name == '부탄'
+        delivary.product_name = 'butane'
+      end
+      total_cost += delivary.product_num_all.to_i * Config.where('product_name = ?',delivary.product_name).first.cost.to_i
+    end
+
+    @add_daily_closing = DailyClosing.new(:date => date, :deliver => deliver, :total_cost => total_cost)
+    @add_daily_closing.save
+
+    credit_delivary.each do |delivary|
+      date = delivary.date
+      name = delivary.name
+      cost = Config.where('product_name = ?',delivary.product_name).first.cost.to_i
+      status = nil
+      product_name = delivary.product_name
+      product_num = delivary.product_num
+      daily_closing_id = @add_daily_closing.id
+
+      @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+      @add_credit.save
+    end
+
+    done_delivary.each do |delivary|
+      delivary.update(status: Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
+    end
+    
+    respond_to do |format|
+      format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
+    end
   end
 
   def closing
@@ -24,10 +67,10 @@ class DailyClosingController < ApplicationController
     @check_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 1)
     @credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
     @done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], 1, 2)
-    @all_delivary = Delivary.get_total_all(params[:deliver])
+    @cost_delivary = Delivary.get_total_all(params[:deliver])
 
     @total_cost = 0
-    @all_delivary.each do |delivary|
+    @cost_delivary.each do |delivary|
       if delivary.product_name == '아르곤'
         delivary.product_name = 'argon'
       elsif delivary.product_name == '산소'
@@ -36,10 +79,6 @@ class DailyClosingController < ApplicationController
         delivary.product_name = 'butane'
       end
       @total_cost += delivary.product_num_all.to_i * Config.where('product_name = ?',delivary.product_name).first.cost.to_i
-    end
-
-    if params[:daily_closing_date].nil?
-
     end
   end
 
@@ -65,7 +104,7 @@ class DailyClosingController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to daily_closing_path(:deliver => params[:deliver] ) }
+      format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
     end
   end
 
@@ -82,7 +121,7 @@ class DailyClosingController < ApplicationController
 
       respond_to do |format|
         begin @add_delivary.save!
-        format.html { redirect_to daily_closing_path(:deliver => params[:deliver] ) }
+        format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
         rescue
           format.html { redirect_to :back,  :flash => { :error => '오류가 발생했습니다.' } }
         end
@@ -98,7 +137,6 @@ class DailyClosingController < ApplicationController
           index = credit.to_i
           delivary = Delivary.find_by(id: index)
           delivary.update(status: Status::Delivary_checking)
-          #TODO: credit에 생성되는 것을 삭제해야됨
         end
       end
     elsif params[:credit].to_i == 2 # 외상체크에있는 내용을 배달목록으로 복구
@@ -123,7 +161,7 @@ class DailyClosingController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to daily_closing_path(:deliver => params[:deliver] ) }
+      format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
     end
   end
 end

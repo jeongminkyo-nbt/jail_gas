@@ -3,6 +3,7 @@ class CreateDailyClosings < ActiveRecord::Migration[5.0]
     create_table :daily_closings do |t|
       t.string :date
       t.string :deliver
+      t.integer :total_cost
       t.timestamps
     end
   end

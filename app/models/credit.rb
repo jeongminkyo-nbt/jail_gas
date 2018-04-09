@@ -2,7 +2,6 @@ class Credit < ApplicationRecord
   validates :name, :date, :cost,  presence: true
   resourcify
   include Authority::Abilities
-  belongs_to :daily_closing
 
   LIST_PER_PAGE = 25
 

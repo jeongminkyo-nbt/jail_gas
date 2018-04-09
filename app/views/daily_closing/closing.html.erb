@@ -1,10 +1,5 @@
 <h1>일일장부</h1>
 
-<%= form_tag daily_closing_path, method: :get, class: 'form-inline search-user-form' do %>
-  <%= select_tag 'daily_closing_date', options_for_select(DailyClosing.all.map{|a| [a.date,a.id] })  %>
-  <button class="btn btn-default" type="submit">검색</button>
-<% end %>
-
 <h3>추가 배달지</h3>
 <%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver]), method: :post, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
@@ -144,31 +139,35 @@
 </div>
 
 <h3>총 금액</h3>
-<%= form_tag daily_closing_update_credit_path(:deliver => params[:deliver]), method: :post, multipart: true, class: 'form-inline' do %>
-  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
-    <thead>
+<table class="table table-hover no-more-tables" style="margin-top: 20px;">
+  <thead>
+  <tr>
+    <th class="h-align">품목</th>
+    <th class="h-align">판매 수량</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @cost_delivary.each do |delivary| %>
     <tr>
-      <th class="h-align">품목</th>
-      <th class="h-align">판매 수량</th>
+      <td><%= change_product_name(delivary.product_name) %></td>
+      <td><%= delivary.product_num_all %></td>
     </tr>
-    </thead>
-    <tbody>
-    <% @all_delivary.each do |delivary| %>
-      <tr>
-        <td><%= change_product_name(delivary.product_name) %></td>
-        <td><%= delivary.product_num_all %></td>
-      </tr>
-    <% end %>
-    <tr>
-      <td>총 금액</td>
-      <td><%= number_with_delimiter(@total_cost) %></td>
-    </tr>
-    </tbody>
-  </table>
+  <% end %>
+  <tr>
+    <td>총 금액</td>
+    <td><%= number_with_delimiter(@total_cost) %></td>
+  </tr>
+  </tbody>
+</table>
+
+<%= form_tag daily_closing_create_path(:deliver => params[:deliver]), method: :post, class: 'form-inline search-user-form' do %>
+  <h3>마감 장부 날짜</h3>
+  <input type="text" name="report_date" id="report_date">
   <div style="height :10px; margin-bottom: 5%;">
     <button class="btn-sm" type="submit" style="float : right; margin : 5px">제출</button>
   </div>
 <% end %>
+
 
 <script>
     $(document).ready(function () {
@@ -215,6 +214,12 @@
 
     $(function() {
         $( "#date" ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+
+    $(function() {
+        $( "#report_date" ).datepicker({
             dateFormat: 'yy-mm-dd'
         });
     });

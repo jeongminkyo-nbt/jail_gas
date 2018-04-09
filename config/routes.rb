@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get '/daily_closing' => :index
     get '/daily_closing/closing' =>:closing, :as => 'daily_closing_report'
     get '/daily_closing/:id' => :show, :as => 'daily_closing_show'
+    post '/daily_closing' => :create, :as => 'daily_closing_create'
     post '/daily_closing/update_delivary' => :update_delivary
     post '/daily_closing/add_delivary' => :add_delivary
     post '/daily_closing/update_credit' => :update_credit
