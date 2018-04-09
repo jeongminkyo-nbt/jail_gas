@@ -1,0 +1,75 @@
+<style>
+  table thead tr th {
+    text-align: center;
+  }
+
+  table tbody tr td {
+    text-align: center;
+  }
+
+  table tr.linkable {
+    cursor: pointer;
+  }
+  select {
+    width: 70px;
+    background-color: #ffffff;
+    background-image: none !important;
+    border: 1px solid #e5e5e5;
+    outline: none;
+    min-height: 35px;
+  }
+</style>
+
+<h1>마감장부</h1>
+<% flash.each do |type, message| %>
+  <div class="alert <%= bootstrap_class_for(type) %> alert-dismissable fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="notice"><%= message %></p>
+  </div>
+<% end %>
+<br>
+<div class="grid simple">
+  <div class="grid-body">
+    <br>
+    <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+      <thead>
+      <tr>
+        <th class="h-align">날짜</th>
+        <th class="h-align">제출자</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @daily_closing.each do |daily| %>
+        <tr id="<%= dom_id(daily) %>"  class="linkable" data-href="<%= daily_closing_path+'/' +daily.id.to_s %>">
+          <td><%= daily.date %></td>
+          <td><%= daily.deliver %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <br>
+    <div style="height :10px; margin-bottom: 5%;">
+      <button class="btn-sm" style="float : right; margin : 5px">
+        <%= link_to '새로 만들기', daily_closing_report_path(deliver: params[:deliver]) %>
+      </button>
+    </div>
+    <div class="col-md-12">
+      <div style="margin-top: 8px; text-align: center; ">
+        <%= paginate @daily_closing %>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+    $(document).ready(function(){
+        $('table td').click(function(){
+            window.location = $(this).parent().data('href');
+            return false;
+        });
+
+        $('[data-toggle="tooltip"]').tooltip();
+        $(".daily_closing").addClass("active");
+
+    });
+</script>

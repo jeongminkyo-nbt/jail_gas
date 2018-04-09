@@ -7,6 +7,7 @@ class CreateCredits < ActiveRecord::Migration[5.0]
       t.integer :status
       t.string :product_name, default: ''
       t.integer :product_num
+      t.integer :daily_closing_id
       t.timestamps
     end
   end

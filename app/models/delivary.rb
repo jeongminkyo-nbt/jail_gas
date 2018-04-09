@@ -2,7 +2,7 @@ class Delivary < ApplicationRecord
   validates :name, :date, presence: true
   resourcify
   include Authority::Abilities
-
+  belongs_to :daily_closing
   LIST_PER_PAGE = 25
 
   def self.change_string_to_time(time_str)

@@ -1,10 +1,22 @@
 class DailyClosingController < ApplicationController
 
+  LIST_PER_PAGE = 25
+
   module Status
     Delivary_ready = 0
     Delivary_checking = 1
     Delivary_credit = 2
     Delivary_done = 3
+  end
+
+  def index
+    page = params[:page].blank? ? 1 : params[:page]
+    @daily_closing = DailyClosing.where('deliver= ?', params[:deliver]).page(page).per(LIST_PER_PAGE)
+  end
+
+  def show
+    @delivary = DailyClosing.find_by_id(params[:id]).delivaries
+
   end
 
   def closing
