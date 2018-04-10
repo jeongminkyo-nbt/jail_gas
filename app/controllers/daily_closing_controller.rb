@@ -17,6 +17,8 @@ class DailyClosingController < ApplicationController
   def show
     @delivary = DailyClosing.find_by_id(params[:id]).delivaries
     @credit = DailyClosing.find_by_id(params[:id]).credits
+    @total_cost = DailyClosing.find_by_id(params[:id]).total_cost
+    @cost_delivary = Delivary.get_done_all_daily_closing(params[:id])
   end
 
   def create
@@ -58,7 +60,7 @@ class DailyClosingController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
+      format.html { redirect_to daily_closing_path(:deliver => params[:deliver] ) }
     end
   end
 

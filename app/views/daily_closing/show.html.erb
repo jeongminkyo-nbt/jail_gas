@@ -60,10 +60,16 @@
   </tr>
   </thead>
   <tbody>
-
+  <% @cost_delivary.each do |delivary| %>
+    <tr>
+      <td><%= delivary.product_name %></td>
+      <td><%= delivary.product_num_all %></td>
+    </tr>
+    </tbody>
+  <% end %>
   <tr>
     <td>총 금액</td>
-    <td></td>
+    <td><%= number_with_delimiter(@total_cost) %></td>
   </tr>
   </tbody>
 </table>
