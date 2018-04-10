@@ -18,16 +18,18 @@ class DailyClosingController < ApplicationController
     @delivary = DailyClosing.find_by_id(params[:id]).delivaries
     @credit = DailyClosing.find_by_id(params[:id]).credits
     @total_cost = DailyClosing.find_by_id(params[:id]).total_cost
-    @cost_delivary = Delivary.get_done_all_daily_closing(params[:id])
+    @daily_closing_done_delivary = DailyClosingDoneDelivary.get_done_all_daily_closing(params[:id])
   end
 
   def create
     credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
     done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], 1, 2)
+    check_delivary = Delivary.where('deliver= ? and status = ?',params[:deliver],1)
     cost_delivary = Delivary.get_total_all(params[:deliver])
     date = params[:report_date]
     deliver = params[:deliver]
     total_cost = 0
+
     cost_delivary.each do |delivary|
       if delivary.product_name == '아르곤'
         delivary.product_name = 'argon'
@@ -41,6 +43,14 @@ class DailyClosingController < ApplicationController
 
     @add_daily_closing = DailyClosing.new(:date => date, :deliver => deliver, :total_cost => total_cost)
     @add_daily_closing.save
+
+    check_delivary.each do |delivary|
+      product_name = delivary.product_name
+      product_num = delivary.product_num
+      daily_closing_id = @add_daily_closing.id
+      @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+      @daily_closing_done_delivary.save
+    end
 
     credit_delivary.each do |delivary|
       date = delivary.date

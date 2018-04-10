@@ -1,7 +1,3 @@
-<%= form_tag daily_closing_show_path, method: :get, class: 'form-inline search-user-form' do %>
-  <%= select_tag 'id', options_for_select(DailyClosing.where('deliver= ?', params[:deliver]).map{|a| [a.date,a.id] })  %>
-  <button class="btn btn-default" type="submit">검색</button>
-<% end %>
 <h3>배달 목록</h3>
 <table class="table table-hover no-more-tables" style="margin-top: 20px;">
   <thead>
@@ -60,7 +56,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @cost_delivary.each do |delivary| %>
+  <% @daily_closing_done_delivary.each do |delivary| %>
     <tr>
       <td><%= delivary.product_name %></td>
       <td><%= delivary.product_num_all %></td>
