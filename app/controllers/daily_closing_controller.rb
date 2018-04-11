@@ -1,4 +1,5 @@
 class DailyClosingController < ApplicationController
+  before_action :authenticate_user!, only: [:show, :index, :create, :closing, :destroy]
 
   LIST_PER_PAGE = 25
 
@@ -12,6 +13,7 @@ class DailyClosingController < ApplicationController
   def index
     page = params[:page].blank? ? 1 : params[:page]
     @daily_closing = DailyClosing.where('deliver= ?', params[:deliver]).page(page).per(LIST_PER_PAGE)
+    authorize_action_for @daily_closing
   end
 
   def show

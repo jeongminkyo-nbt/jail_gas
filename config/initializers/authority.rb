@@ -29,7 +29,10 @@ Authority.configure do |config|
     :update  => 'update',
     :destroy => 'delete',
     :recent_return => 'update',
-    :receive_return => 'update'
+    :receive_return => 'update',
+    :add_people => 'create',
+    :receive_index => 'read',
+    :recent_index => 'read'
   }
 
   # ABILITIES

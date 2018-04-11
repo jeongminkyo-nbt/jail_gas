@@ -1,6 +1,9 @@
 class CompanyHosing < ApplicationRecord
   validates :name, :dong, :ho, :call, :prev_month, :current_month, :usage, :share, :usage_money, presence: true
 
+  resourcify
+  include Authority::Abilities
+
   PER_MONEY = Config.find_by_id(8).cost
   SHARE = Config.find_by_id(7).cost
 

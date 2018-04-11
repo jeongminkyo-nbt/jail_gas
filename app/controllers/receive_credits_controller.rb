@@ -7,7 +7,7 @@ class ReceiveCreditsController < ApplicationController
     where_clause = Credit.make_where_clause(params)
 
     @credits = Credit.find_credit_list(page, where_clause)
-
+    authorize_action_for @credits
     respond_to do |format|
       format.html
     end
@@ -19,7 +19,7 @@ class ReceiveCreditsController < ApplicationController
     where_clause = Credit.make_where_clause(params)
 
     @credits = Credit.find_credit_list(page, where_clause)
-
+    authorize_action_for @credits
     respond_to do |format|
       format.html
     end

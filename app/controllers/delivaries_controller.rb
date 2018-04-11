@@ -10,6 +10,7 @@ class DelivariesController < ApplicationController
     where_clause = Delivary.make_where_clause(params)
 
     @delivaries = Delivary.find_delivary_list(page, where_clause)
+    authorize_action_for @delivaries
   end
 
   # GET /delivaries/1

@@ -1,5 +1,5 @@
 class CompanyHosingController < ApplicationController
-  before_action :authenticate_user!, only: [:company_hosing, :edit]
+  before_action :authenticate_user!, only: [:company_hosing, :edit, :add_people]
 
   PER_MONEY = Config.find_by_id(8).cost
   SHARE = Config.find_by_id(7).cost
@@ -26,7 +26,7 @@ class CompanyHosingController < ApplicationController
     end
 
     @company_housing = CompanyHosing.where('dong = ?', @select_dong.to_i)
-    
+    authorize_action_for @company_housing
   end
 
   def edit_people
@@ -80,6 +80,7 @@ class CompanyHosingController < ApplicationController
     end
 
     @company_housing = CompanyHosing.where('dong = ?',@select_dong.to_i)
+    authorize_action_for @company_housing
 
     respond_to do |format|
       format.html
