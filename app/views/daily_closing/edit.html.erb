@@ -1,0 +1,171 @@
+<h3>추가 배달지</h3>
+<%= form_tag daily_closing_edit_add_delivary_path(:deliver => params[:deliver], :id => params[:id]), method: :post, class: 'form-inline' do %>
+  <table class="table table-hover no-more-tables" style="margin-top: 20px;">
+    <thead>
+    <tr>
+      <th class="h-align">날짜</th>
+      <th class="h-align">배달지</th>
+      <th class="h-align">품목</th>
+      <th class="h-align">수량</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><input type="text" name="date" id="date"></td>
+      <td><input type="text" name="name"></td>
+      <td><%= select_tag 'product_name', options_for_select(['10kg', '20kg', '50kg', '산소', '아르곤', '부탄'], '20kg')  %></td>
+      <td><%= select_tag 'product_num', options_for_select(['1','2','3','4','5','6'], '1')  %></td>
+    </tr>
+    </tbody>
+  </table>
+  <div style="height :10px; margin-bottom: 5%;">
+    <button class="btn-sm" type="submit" style="float : right">확인</button>
+  </div>
+<% end %>
+
+<h3>배달 목록</h3>
+<%= form_tag daily_closing_edit_delivary_path(:deliver => params[:deliver], :id => params[:id]), method: :post, multipart: true, class: 'form-inline' do %>
+<table class="table table-hover no-more-tables" style="margin-top: 20px;">
+  <thead>
+  <tr>
+    <th class="h-align"><%= check_box_tag 'delivaries_checkall' %></th>
+    <th class="h-align">날짜</th>
+    <th class="h-align">배달지</th>
+    <th class="h-align">품목</th>
+    <th class="h-align">수량</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @delivary.each do |delivary| %>
+    <tr>
+      <td><%= check_box_tag 'delivary_ids[]', delivary.id %></td>
+      <td><%= delivary.date %></td>
+      <td><%= delivary.name %></td>
+      <td><%= delivary.product_name %></td>
+      <td><%= delivary.product_num %></td>
+    </tr>
+    </tbody>
+  <% end %>
+  </table>
+<div style="height :10px; margin-bottom: 5%;">
+  <button class="btn-sm" type="submit" name="delivary" value="1" style="float : right; margin : 5px">삭제</button>
+  <button class="btn-sm" type="submit" name="delivary" value="0" style="float : right; margin : 5px">외상</button>
+</div>
+<% end %>
+
+<h3>외상 목록</h3>
+<%= form_tag daily_closing_delete_path(:deliver => params[:deliver], :id => params[:id]), method: :post, class: 'form-inline' do %>
+<table class="table table-hover no-more-tables" style="margin-top: 20px;">
+  <thead>
+  <tr>
+    <th class="h-align"><%= check_box_tag 'return_credits_checkall' %></th>
+    <th class="h-align">날짜</th>
+    <th class="h-align">배달지</th>
+    <th class="h-align">품목</th>
+    <th class="h-align">수량</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @credit.each do |credit| %>
+    <tr>
+      <td><%= check_box_tag 'return_credits_ids[]', credit.id %></td>
+      <td><%= credit.date %></td>
+      <td><%= credit.name %></td>
+      <td><%= credit.product_name %></td>
+      <td><%= credit.product_num %></td>
+    </tr>
+    </tbody>
+  <% end %>
+  </table>
+<div style="height :10px; margin-bottom: 5%;">
+  <button class="btn-sm" type="submit" style="float : right">삭제</button>
+</div>
+<% end %>
+
+<h3>총 금액</h3>
+<table class="table table-hover no-more-tables" style="margin-top: 20px;">
+  <thead>
+  <tr>
+    <th class="h-align">품목</th>
+    <th class="h-align">판매 수량</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @daily_closing_done_delivary.each do |delivary| %>
+    <tr>
+      <td><%= delivary['product_name'] %></td>
+      <td><%= delivary['sum(product_num)'] %></td>
+    </tr>
+    </tbody>
+  <% end %>
+<%= form_tag daily_closing_edit_closing_path(:deliver => params[:deliver], :id => params[:id]), method: :post, class: 'form-inline' do %>
+    <tr>
+      <td>총 금액</td>
+      <td><%= number_with_delimiter(@total_cost) %></td>
+    </tr>
+    </tbody>
+    </table>
+  <div style="height :10px; margin-bottom: 5%;">
+    <button class="btn-sm" style="float : right; margin : 5px">
+      <%= link_to '뒤로', daily_closing_path(deliver: params[:deliver]) %>
+    </button>
+    <button class="btn-sm" type="submit" style="float : right; margin : 5px">수정</button>
+  </div>
+<% end %>
+
+<script>
+    $(document).ready(function () {
+        //최상단 체크박스 클릭
+        $("#delivaries_checkall").click(function () {
+            //클릭되었으면
+            if ($("#delivaries_checkall").prop("checked")) {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
+                $("input[id=delivary_ids_]").prop("checked", true);
+
+                //클릭이 안되있으면
+            } else {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 false로 정의
+                $("input[id=delivary_ids_]").prop("checked", false);
+            }
+        });
+
+        $("#credits_checkall").click(function () {
+            //클릭되었으면
+            if ($("#credits_checkall").prop("checked")) {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
+                $("input[id=credits_ids_]").prop("checked", true);
+
+                //클릭이 안되있으면
+            } else {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 false로 정의
+                $("input[id=credits_ids_]").prop("checked", false);
+            }
+        });
+
+        $("#return_credits_checkall").click(function () {
+            //클릭되었으면
+            if ($("#return_credits_checkall").prop("checked")) {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
+                $("input[id=return_credits_ids_]").prop("checked", true);
+
+                //클릭이 안되있으면
+            } else {
+                //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 false로 정의
+                $("input[id=return_credits_ids_]").prop("checked", false);
+            }
+        });
+    })
+
+    $(function() {
+        $( "#date" ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+
+    $(function() {
+        $( "#credit_date" ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+
+</script>

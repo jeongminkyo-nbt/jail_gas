@@ -73,4 +73,7 @@
   <button class="btn-sm" style="float : right; margin : 5px">
     <%= link_to '뒤로', daily_closing_path(deliver: params[:deliver]) %>
   </button>
+  <button class="btn-sm" style="float : right; margin : 5px">
+    <%= link_to '수정', daily_closing_edit_path(deliver: params[:deliver]) %>
+  </button>
 </div>

@@ -8,6 +8,7 @@ class DailyClosingController < ApplicationController
     Delivary_checking = 1
     Delivary_credit = 2
     Delivary_done = 3
+    Delivary_edit = 4
   end
 
   def index
@@ -76,6 +77,23 @@ class DailyClosingController < ApplicationController
     end
   end
 
+  def edit
+    @delivary = DailyClosing.find_by_id(params[:id]).delivaries
+    @credit = DailyClosing.find_by_id(params[:id]).credits
+    @total_cost = 0
+    @daily_closing_done_delivary = DailyClosingDoneDelivary.get_done_all_daily_closing_edit(params[:id])
+    @daily_closing_done_delivary.each do |delivary|
+      if delivary['product_name'] == '아르곤'
+        delivary['product_name'] = 'argon'
+      elsif delivary['product_name'] == '산소'
+        delivary['product_name'] = 'air'
+      elsif delivary['product_name'] == '부탄'
+        delivary['product_name'] = 'butane'
+      end
+      @total_cost += delivary['sum(product_num)'].to_i * Config.where('product_name = ?',delivary['product_name']).first.cost.to_i
+    end
+  end
+
   def closing
     @delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 0)
     @check_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 1)
@@ -97,28 +115,63 @@ class DailyClosingController < ApplicationController
   end
 
   def update_delivary
-    if params[:delivary].to_i == 0
-      if params[:delivary_ids].present?
-        delivary_ids = params[:delivary_ids]
-        delivary_ids.each do |delivary|
-          index = delivary.to_i
-          delivary = Delivary.find_by(id: index)
-          delivary.update(status: Status::Delivary_checking)
-        end
-      end
-    elsif params[:delivary].to_i == 1
+    if params[:delivary].to_i == 0 # 외상 생성
       if params[:delivary_ids].present?
         delivary_ids = params[:delivary_ids]
         delivary_ids.each do |delivary|
           index = delivary.to_i
           deliv = Delivary.find_by(id: index)
-          deliv.destroy # TODO: 찾은 delivary 삭제 필요
+          deliv.update(status: Status::Delivary_checking)
+        end
+      end
+    elsif params[:delivary].to_i == 1 # 복구
+      if params[:delivary_ids].present?
+        delivary_ids = params[:delivary_ids]
+        delivary_ids.each do |delivary|
+          index = delivary.to_i
+          deliv = Delivary.find_by(id: index)
+          deliv.destroy
         end
       end
     end
 
     respond_to do |format|
       format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
+    end
+  end
+
+  def edit_delivary
+    if params[:delivary].to_i == 0 # 외상 생성
+      if params[:delivary_ids].present?
+        delivary_ids = params[:delivary_ids]
+        delivary_ids.each do |delivary|
+          index = delivary.to_i
+          deliv = Delivary.find_by(id: index)
+          deliv.update(status: Status::Delivary_credit)
+          date = deliv.date
+          name = deliv.name
+          cost = Config.where('product_name = ?',deliv.product_name).first.cost.to_i
+          status = nil
+          product_name = deliv.product_name
+          product_num = deliv.product_num
+          daily_closing_id = params[:id]
+          @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+          @add_credit.save
+        end
+      end
+    elsif params[:delivary].to_i == 1 # 복구
+      if params[:delivary_ids].present?
+        delivary_ids = params[:delivary_ids]
+        delivary_ids.each do |delivary|
+          index = delivary.to_i
+          deliv = Delivary.find_by(id: index)
+          deliv.destroy
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ) }
     end
   end
 
@@ -130,14 +183,26 @@ class DailyClosingController < ApplicationController
       product_num = params[:product_num].to_i
       deliver = params[:deliver]
       status = Status::Delivary_ready
+      if params[:id].present? # 수정시
+        daily_closing_id = params[:id].to_i
+        status = Status::Delivary_edit
+        @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status, :daily_closing_id => daily_closing_id)
 
-      @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status)
-
-      respond_to do |format|
-        begin @add_delivary.save!
-        format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
-        rescue
-          format.html { redirect_to :back,  :flash => { :error => '오류가 발생했습니다.' } }
+        respond_to do |format|
+          begin @add_delivary.save!
+          format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ) }
+          rescue
+            format.html { redirect_to :back,  :flash => { :error => '오류가 발생했습니다.' } }
+          end
+        end
+      else  # 생성시
+        @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status)
+        respond_to do |format|
+          begin @add_delivary.save!
+          format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
+          rescue
+            format.html { redirect_to :back,  :flash => { :error => '오류가 발생했습니다.' } }
+          end
         end
       end
     end
@@ -176,6 +241,55 @@ class DailyClosingController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
+    end
+  end
+
+  def delete_credit
+    if params[:return_credits_ids].present?
+      return_credits_ids = params[:return_credits_ids]
+      return_credits_ids.each do |credit|
+        index = credit.to_i
+        delivary = Credit.find_by(id: index)
+        delivary.destroy
+      end
+    end
+
+    respond_to do |format|
+      format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ) }
+    end
+  end
+
+  def edit_closing
+    @daily_closing_done_delivary = DailyClosingDoneDelivary.get_done_all_daily_closing_edit(params[:id])
+    total_cost = 0
+    @daily_closing_done_delivary.each do |delivary|
+      if delivary['product_name'] == '아르곤'
+        delivary['product_name'] = 'argon'
+      elsif delivary['product_name'] == '산소'
+        delivary['product_name'] = 'air'
+      elsif delivary['product_name'] == '부탄'
+        delivary['product_name'] = 'butane'
+      end
+      total_cost += delivary['sum(product_num)'].to_i * Config.where('product_name = ?',delivary['product_name']).first.cost.to_i
+    end
+
+    @done_delivary = Delivary.where('status = ? or status = ?', Status::Delivary_credit, Status::Delivary_edit)
+    @done_delivary.each do |delivary|
+      if delivary.status == 4
+        product_name = delivary.product_name
+        product_num = delivary.product_num
+        daily_closing_id = params[:id]
+        @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+        @daily_closing_done_delivary.save
+      end
+      delivary.update(status: Status::Delivary_done)
+    end
+
+    @daily_closing = DailyClosing.find_by_id(params[:id])
+    @daily_closing.update(total_cost: total_cost)
+
+    respond_to do |format|
+      format.html { redirect_to daily_closing_show_path(:id => params[:id], :deliver => params[:deliver] ) }
     end
   end
 end
