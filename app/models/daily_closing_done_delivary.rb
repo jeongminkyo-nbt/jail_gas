@@ -25,6 +25,6 @@ class DailyClosingDoneDelivary < ApplicationRecord
                    )
                 ) as temp
            group by product_name"
-    ActiveRecord::Base.connection.exec_query(sql)
+    result = ActiveRecord::Base.connection.exec_query(sql)
   end
 end

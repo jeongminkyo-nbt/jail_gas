@@ -1,5 +1,5 @@
 <h3>추가 배달지</h3>
-<%= form_tag daily_closing_edit_add_delivary_path(:deliver => params[:deliver], :id => params[:id]), method: :post, class: 'form-inline' do %>
+<%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver], :id => params[:id]), method: :post, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>
     <tr>
@@ -19,7 +19,7 @@
     </tbody>
   </table>
   <div style="height :10px; margin-bottom: 5%;">
-    <button class="btn-sm" type="submit" style="float : right">확인</button>
+    <button class="btn-sm" type="submit" name="delivary" value="1" style="float : right">확인</button>
   </div>
 <% end %>
 

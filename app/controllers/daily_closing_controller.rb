@@ -183,7 +183,7 @@ class DailyClosingController < ApplicationController
       product_num = params[:product_num].to_i
       deliver = params[:deliver]
       status = Status::Delivary_ready
-      if params[:id].present? # 수정시
+      if params[:delivary].to_i == 1 # 수정시
         daily_closing_id = params[:id].to_i
         status = Status::Delivary_edit
         @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status, :daily_closing_id => daily_closing_id)
@@ -195,7 +195,8 @@ class DailyClosingController < ApplicationController
             format.html { redirect_to :back,  :flash => { :error => '오류가 발생했습니다.' } }
           end
         end
-      else  # 생성시
+      elsif params[:delivary].to_i == 0 # 생성시
+        p 'hihi'
         @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status)
         respond_to do |format|
           begin @add_delivary.save!

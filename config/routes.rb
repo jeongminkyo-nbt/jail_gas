@@ -14,14 +14,13 @@ Rails.application.routes.draw do
     get '/daily_closing/closing' =>:closing, :as => 'daily_closing_report'
     get '/daily_closing/:id' => :show, :as => 'daily_closing_show'
     get '/daily_closing/:id/edit' => :edit, :as =>'daily_closing_edit'
-    post '/daily_closing/:id' => :edit_closing, :as => 'daily_closing_edit_closing'
-    post '/daily_closing/:id/edit/destroy' => :delete_credit, :as => 'daily_closing_delete'
-    post '/daily_closing/:id/edit_delivary' => :edit_delivary, :as =>'daily_closing_edit_delivary'
-    post '/daily_closing/:id/add_delivary' => :add_delivary, :as =>'daily_closing_edit_add_delivary'
     post '/daily_closing' => :create, :as => 'daily_closing_create'
     post '/daily_closing/update_delivary' => :update_delivary
     post '/daily_closing/add_delivary' => :add_delivary
     post '/daily_closing/update_credit' => :update_credit
+    post '/daily_closing/:id' => :edit_closing, :as => 'daily_closing_edit_closing'
+    post '/daily_closing/:id/edit/destroy' => :delete_credit, :as => 'daily_closing_delete'
+    post '/daily_closing/:id/edit_delivary' => :edit_delivary, :as =>'daily_closing_edit_delivary'
   end
   controller :config do
     get '/configs' => :index
