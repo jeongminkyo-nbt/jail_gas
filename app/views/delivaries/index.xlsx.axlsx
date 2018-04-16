@@ -1,0 +1,12 @@
+wb = xlsx_package.workbook
+
+
+wb.add_worksheet(name: "Credits") do |sheet|
+  # this is the head row of your spreadsheet
+  sheet.add_row %w(날짜 배달 품목 수량 배달자 배달상태)
+
+  # each user is a row on your spreadsheet
+  @delivaries_all.each do |delivary|
+    sheet.add_row [delivary.date, delivary.name, delivary.product_name, delivary.product_num, delivary.deliver, get_status(delivary.status)]
+  end
+end

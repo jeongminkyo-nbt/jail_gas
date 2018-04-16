@@ -78,6 +78,10 @@
     <button class="btn-sm">
       <%= link_to '추가', new_credit_path %>
     </button>
+    <button class="btn-sm">
+      <%= link_to 'excel 다운로드', credits_path(format: 'xlsx') %>
+    </button>
+
     <div class="col-md-12">
       <div style="margin-top: 8px; text-align: center; ">
         <%= paginate @credits %>

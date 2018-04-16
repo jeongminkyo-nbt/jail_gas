@@ -1,0 +1,12 @@
+wb = xlsx_package.workbook
+
+
+wb.add_worksheet(name: "Credits") do |sheet|
+  # this is the head row of your spreadsheet
+  sheet.add_row %w(동 호 이름 전화번호 전월검침 당월검침 사용량 가스,기화기부담금 사용금)
+
+  # each user is a row on your spreadsheet
+  @company_housing_all.each do |company_housing|
+    sheet.add_row [company_housing.dong, company_housing.ho, company_housing.name, company_housing.call, company_housing.prev_month, company_housing.current_month, company_housing.usage, company_housing.share, company_housing.usage_money]
+  end
+end

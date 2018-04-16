@@ -60,6 +60,9 @@
       <br>
 
       <%= submit_tag '복구',class: 'btn-sm', name: 'return_credits' %>
+      <button class="btn-sm">
+        <%= link_to 'excel 다운로드', recent_credits_path(format: 'xlsx') %>
+      </button>
       <div class="col-md-12">
         <div style="margin-top: 8px; text-align: center; ">
           <%= paginate @credits %>

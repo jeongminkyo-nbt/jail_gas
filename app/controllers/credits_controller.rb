@@ -10,9 +10,11 @@ class CreditsController < ApplicationController
     where_clause = Credit.make_where_clause(params)
 
     @credits = Credit.find_credit_list(page, where_clause)
+    @credits_all = Credit.where('status is null')
 
     respond_to do |format|
      format.html
+     format.xlsx { response.headers['Content-Disposition'] = 'attachment; filename="외상장부.xlsx"' }
     end
 
   end

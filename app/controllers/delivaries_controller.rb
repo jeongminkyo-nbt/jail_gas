@@ -10,7 +10,13 @@ class DelivariesController < ApplicationController
     where_clause = Delivary.make_where_clause(params)
 
     @delivaries = Delivary.find_delivary_list(page, where_clause)
+    @delivaries_all = Delivary.all
     authorize_action_for @delivaries
+
+    respond_to do |format|
+      format.html
+      format.xlsx { response.headers['Content-Disposition'] = 'attachment; filename="배달_장부.xlsx"' }
+    end
   end
 
   # GET /delivaries/1

@@ -12,9 +12,11 @@ class CompanyHosingController < ApplicationController
     end
 
     @company_housing = CompanyHosing.where('dong = ?',@select_dong.to_i)
+    @company_housing_all = CompanyHosing.all
 
     respond_to do |format|
       format.html
+      format.xlsx { response.headers['Content-Disposition'] = 'attachment; filename="사택_검침_장부.xlsx"' }
     end
   end
 

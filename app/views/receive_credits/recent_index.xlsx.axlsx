@@ -1,0 +1,12 @@
+wb = xlsx_package.workbook
+
+
+wb.add_worksheet(name: "Credits") do |sheet|
+  # this is the head row of your spreadsheet
+  sheet.add_row %w(날짜 외상자 품목 수량 금액)
+
+  # each user is a row on your spreadsheet
+  @credits_all.each do |credit|
+    sheet.add_row [credit.date, credit.name, credit.product_name, credit.product_num, credit.cost]
+  end
+end
