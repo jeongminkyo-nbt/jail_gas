@@ -34,6 +34,7 @@ class CompanyHosingController < ApplicationController
   end
 
   def apply_edit_people
+    if params[:dong].present? && params[:ho].present? && params[:name].present? &&params[:call].present? && params[:prev_month].present? && params[:current_month].present?
     dong = params[:dong]
     ho = params[:ho]
     name = params[:name]
@@ -44,6 +45,7 @@ class CompanyHosingController < ApplicationController
     share = SHARE.to_i
     usage_money = usage * PER_MONEY.to_i + SHARE.to_i
     company_housing = CompanyHosing.find_by_id(params[:id])
+    end
 
     respond_to do |format|
       begin company_housing.update_attributes!(:dong => dong, :ho => ho, :name => name, :call => call, :prev_month => prev_month, :current_month => current_month, :usage => usage, :share => share, :usage_money => usage_money)
@@ -54,22 +56,28 @@ class CompanyHosingController < ApplicationController
     end
   end
 
-  # :TODO 업데이트 중 하나라도 에러가 나면 다 업데이트가 되지 않게 한다. model과 같이 봐야함
   def set_update
-    params[:id].map do |row|
-      company_hosing = CompanyHosing.find_by_id(row[0].to_i)
-      current_month = row[1]
-      prev_month = company_hosing.current_month.to_i
-      current_usage = current_month.to_i - prev_month
-      current_usage_money = current_usage * PER_MONEY.to_i + SHARE.to_i
-      if current_month.present?
-        company_hosing.update_attributes!(:usage => current_usage.to_i, :usage_money => current_usage_money.to_i, :prev_month => prev_month, :current_month => current_month, :share => SHARE.to_i)
+    CompanyHosing.transaction do
+      params[:id].map do |row|
+        company_hosing = CompanyHosing.find_by_id(row[0].to_i)
+        current_month = row[1]
+        prev_month = company_hosing.current_month.to_i
+        current_usage = current_month.to_i - prev_month
+        current_usage_money = current_usage * PER_MONEY.to_i + SHARE.to_i
+        if current_month.present?
+          company_hosing.update_attributes!(:usage => current_usage.to_i, :usage_money => current_usage_money.to_i, :prev_month => prev_month, :current_month => current_month, :share => SHARE.to_i)
         end
       end
+    end
 
     respond_to do |format|
       format.html { redirect_to company_housing_path, notice: '변경사항이 적용되었습니다.' }
     end
+
+    rescue => e
+      respond_to do |format|
+        format.html { redirect_to company_housing_path, :flash => { :error => '오류가 발생했습니다.' } }
+      end
   end
 
   def add_people

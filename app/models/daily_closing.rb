@@ -5,5 +5,5 @@ class DailyClosing < ApplicationRecord
 
   resourcify
   include Authority::Abilities
-
+  validates :date, :total_cost,  presence: true
 end

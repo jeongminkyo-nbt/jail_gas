@@ -13,7 +13,7 @@ class DailyClosingController < ApplicationController
 
   def index
     page = params[:page].blank? ? 1 : params[:page]
-    @daily_closing = DailyClosing.where('deliver= ?', params[:deliver]).page(page).per(LIST_PER_PAGE)
+    @daily_closing = DailyClosing.where('deliver= ?', params[:deliver]).order('id DESC').page(page).per(LIST_PER_PAGE)
     authorize_action_for @daily_closing
   end
 
