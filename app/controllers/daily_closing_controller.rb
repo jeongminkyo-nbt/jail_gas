@@ -68,7 +68,7 @@ class DailyClosingController < ApplicationController
         elsif delivary.product_name == '부탄'
           delivary.product_name = 'butane'
         end
-        cost = Config.where('product_name = ?',delivary.product_name).first.cost.to_i
+        cost = Config.where('product_name = ?',delivary.product_name).first.cost.to_i * delivary.product_num
         status = nil
         product_num = delivary.product_num
         daily_closing_id = @add_daily_closing.id
@@ -183,7 +183,7 @@ class DailyClosingController < ApplicationController
             elsif deliv.product_name == '부탄'
               deliv.product_name = 'butane'
             end
-            cost = Config.where('product_name = ?',deliv.product_name).first.cost.to_i
+            cost = Config.where('product_name = ?',deliv.product_name).first.cost.to_i * deliv.product_num
             status = nil
             product_num = deliv.product_num
             daily_closing_id = params[:id]
