@@ -44,10 +44,11 @@ class DailyClosingController < ApplicationController
       total_cost += delivary.product_num_all.to_i * Config.where('product_name = ?',delivary.product_name).first.cost.to_i
     end
 
-    @add_daily_closing = DailyClosing.new(:date => date, :deliver => deliver, :total_cost => total_cost)
-    @add_daily_closing.save!
+    ApplicationRecord.transaction do
+      @add_daily_closing = DailyClosing.new(:date => date, :deliver => deliver, :total_cost => total_cost)
+      @add_daily_closing.save!
 
-    DailyClosingDoneDelivary.transaction do
+
       check_delivary.each do |delivary|
         product_name = delivary.product_name
         product_num = delivary.product_num
@@ -55,26 +56,29 @@ class DailyClosingController < ApplicationController
         @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
         @daily_closing_done_delivary.save!
       end
-    end
 
-    Credit.transaction do
       credit_delivary.each do |delivary|
         date = delivary.date
         name = delivary.name
+        product_name_ko = delivary.product_name
+        if delivary.product_name == '아르곤'
+          delivary.product_name = 'argon'
+        elsif delivary.product_name == '산소'
+          delivary.product_name = 'air'
+        elsif delivary.product_name == '부탄'
+          delivary.product_name = 'butane'
+        end
         cost = Config.where('product_name = ?',delivary.product_name).first.cost.to_i
         status = nil
-        product_name = delivary.product_name
         product_num = delivary.product_num
         daily_closing_id = @add_daily_closing.id
 
-        @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
-        @add_credit.save
+        @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name_ko, :product_num => product_num, :daily_closing_id => daily_closing_id)
+        @add_credit.save!
       end
-    end
 
-    Delivary.transaction do
       done_delivary.each do |delivary|
-        delivary.update(status: Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
+        delivary.update!(status: Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
       end
     end
 
@@ -133,7 +137,7 @@ class DailyClosingController < ApplicationController
           delivary_ids.each do |delivary|
             index = delivary.to_i
             deliv = Delivary.find_by(id: index)
-            deliv.update(status: Status::Delivary_checking)
+            deliv.update!(status: Status::Delivary_checking)
           end
         end
       end
@@ -144,7 +148,7 @@ class DailyClosingController < ApplicationController
           delivary_ids.each do |delivary|
             index = delivary.to_i
             deliv = Delivary.find_by(id: index)
-            deliv.destroy
+            deliv.destroy!
           end
         end
       end
@@ -171,12 +175,19 @@ class DailyClosingController < ApplicationController
             deliv.update!(status: Status::Delivary_credit)
             date = deliv.date
             name = deliv.name
+            product_name_ko = deliv.product_name
+            if deliv.product_name == '아르곤'
+              deliv.product_name = 'argon'
+            elsif deliv.product_name == '산소'
+              deliv.product_name = 'air'
+            elsif deliv.product_name == '부탄'
+              deliv.product_name = 'butane'
+            end
             cost = Config.where('product_name = ?',deliv.product_name).first.cost.to_i
             status = nil
-            product_name = deliv.product_name
             product_num = deliv.product_num
             daily_closing_id = params[:id]
-            @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+            @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name_ko, :product_num => product_num, :daily_closing_id => daily_closing_id)
             @add_credit.save!
           end
         end
@@ -188,7 +199,7 @@ class DailyClosingController < ApplicationController
           delivary_ids.each do |delivary|
             index = delivary.to_i
             deliv = Delivary.find_by(id: index)
-            deliv.destroy
+            deliv.destroy!
           end
         end
       end
@@ -245,7 +256,7 @@ class DailyClosingController < ApplicationController
           return_credits_ids.each do |credit|
             index = credit.to_i
             delivary = Delivary.find_by(id: index)
-            delivary.update(status: Status::Delivary_checking)
+            delivary.update!(status: Status::Delivary_checking)
           end
         end
       end
@@ -256,7 +267,7 @@ class DailyClosingController < ApplicationController
           credits_ids.each do |credit|
             index = credit.to_i
             delivary = Delivary.find_by(id: index)
-            delivary.update(status: Status::Delivary_ready)
+            delivary.update!(status: Status::Delivary_ready)
           end
         end
       end
@@ -267,7 +278,7 @@ class DailyClosingController < ApplicationController
           credits_ids.each do |credit|
             index = credit.to_i
             delivary = Delivary.find_by(id: index)
-            delivary.update(status: Status::Delivary_credit)
+            delivary.update!(status: Status::Delivary_credit)
           end
         end
       end
@@ -290,7 +301,7 @@ class DailyClosingController < ApplicationController
         return_credits_ids.each do |credit|
           index = credit.to_i
           delivary = Credit.find_by(id: index)
-          delivary.destroy
+          delivary.destroy!
         end
       end
     end
