@@ -1,4 +1,10 @@
 <h3>추가 배달지</h3>
+<% flash.each do |type, message| %>
+  <div class="alert <%= bootstrap_class_for(type) %> alert-dismissable fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="notice"><%= message %></p>
+  </div>
+<% end %>
 <%= form_tag daily_closing_add_delivary_path(:deliver => params[:deliver], :id => params[:id]), method: :post, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 20px;">
     <thead>

@@ -45,35 +45,46 @@ class DailyClosingController < ApplicationController
     end
 
     @add_daily_closing = DailyClosing.new(:date => date, :deliver => deliver, :total_cost => total_cost)
-    @add_daily_closing.save
+    @add_daily_closing.save!
 
-    check_delivary.each do |delivary|
-      product_name = delivary.product_name
-      product_num = delivary.product_num
-      daily_closing_id = @add_daily_closing.id
-      @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
-      @daily_closing_done_delivary.save
+    DailyClosingDoneDelivary.transaction do
+      check_delivary.each do |delivary|
+        product_name = delivary.product_name
+        product_num = delivary.product_num
+        daily_closing_id = @add_daily_closing.id
+        @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+        @daily_closing_done_delivary.save!
+      end
     end
 
-    credit_delivary.each do |delivary|
-      date = delivary.date
-      name = delivary.name
-      cost = Config.where('product_name = ?',delivary.product_name).first.cost.to_i
-      status = nil
-      product_name = delivary.product_name
-      product_num = delivary.product_num
-      daily_closing_id = @add_daily_closing.id
+    Credit.transaction do
+      credit_delivary.each do |delivary|
+        date = delivary.date
+        name = delivary.name
+        cost = Config.where('product_name = ?',delivary.product_name).first.cost.to_i
+        status = nil
+        product_name = delivary.product_name
+        product_num = delivary.product_num
+        daily_closing_id = @add_daily_closing.id
 
-      @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
-      @add_credit.save
+        @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+        @add_credit.save
+      end
     end
 
-    done_delivary.each do |delivary|
-      delivary.update(status: Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
+    Delivary.transaction do
+      done_delivary.each do |delivary|
+        delivary.update(status: Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
+      end
     end
-    
+
     respond_to do |format|
       format.html { redirect_to daily_closing_path(:deliver => params[:deliver] ) }
+    end
+
+  rescue => e
+    respond_to do |format|
+      format.html { redirect_to daily_closing_path(:deliver => params[:deliver] ), :flash => { :error => '오류가 발생했습니다.' } }
     end
   end
 
@@ -118,19 +129,23 @@ class DailyClosingController < ApplicationController
     if params[:delivary].to_i == 0 # 외상 생성
       if params[:delivary_ids].present?
         delivary_ids = params[:delivary_ids]
-        delivary_ids.each do |delivary|
-          index = delivary.to_i
-          deliv = Delivary.find_by(id: index)
-          deliv.update(status: Status::Delivary_checking)
+        Delivary.transaction do
+          delivary_ids.each do |delivary|
+            index = delivary.to_i
+            deliv = Delivary.find_by(id: index)
+            deliv.update(status: Status::Delivary_checking)
+          end
         end
       end
     elsif params[:delivary].to_i == 1 # 복구
       if params[:delivary_ids].present?
         delivary_ids = params[:delivary_ids]
-        delivary_ids.each do |delivary|
-          index = delivary.to_i
-          deliv = Delivary.find_by(id: index)
-          deliv.destroy
+        Delivary.transaction do
+          delivary_ids.each do |delivary|
+            index = delivary.to_i
+            deliv = Delivary.find_by(id: index)
+            deliv.destroy
+          end
         end
       end
     end
@@ -138,34 +153,43 @@ class DailyClosingController < ApplicationController
     respond_to do |format|
       format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
     end
+
+  rescue => e
+    respond_to do |format|
+      format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ), :flash => { :error => '오류가 발생했습니다.' } }
+    end
   end
 
-  def edit_delivary
+  def edit_delivary #완료
     if params[:delivary].to_i == 0 # 외상 생성
       if params[:delivary_ids].present?
         delivary_ids = params[:delivary_ids]
-        delivary_ids.each do |delivary|
-          index = delivary.to_i
-          deliv = Delivary.find_by(id: index)
-          deliv.update(status: Status::Delivary_credit)
-          date = deliv.date
-          name = deliv.name
-          cost = Config.where('product_name = ?',deliv.product_name).first.cost.to_i
-          status = nil
-          product_name = deliv.product_name
-          product_num = deliv.product_num
-          daily_closing_id = params[:id]
-          @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
-          @add_credit.save
+        ApplicationRecord.transaction do
+          delivary_ids.each do |delivary|
+            index = delivary.to_i
+            deliv = Delivary.find_by(id: index)
+            deliv.update!(status: Status::Delivary_credit)
+            date = deliv.date
+            name = deliv.name
+            cost = Config.where('product_name = ?',deliv.product_name).first.cost.to_i
+            status = nil
+            product_name = deliv.product_name
+            product_num = deliv.product_num
+            daily_closing_id = params[:id]
+            @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+            @add_credit.save!
+          end
         end
       end
     elsif params[:delivary].to_i == 1 # 복구
       if params[:delivary_ids].present?
         delivary_ids = params[:delivary_ids]
-        delivary_ids.each do |delivary|
-          index = delivary.to_i
-          deliv = Delivary.find_by(id: index)
-          deliv.destroy
+        Delivary.transaction do
+          delivary_ids.each do |delivary|
+            index = delivary.to_i
+            deliv = Delivary.find_by(id: index)
+            deliv.destroy
+          end
         end
       end
     end
@@ -173,9 +197,14 @@ class DailyClosingController < ApplicationController
     respond_to do |format|
       format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ) }
     end
+
+  rescue => e
+    respond_to do |format|
+      format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ), :flash => { :error => '오류가 발생했습니다.' } }
+    end
   end
 
-  def add_delivary
+  def add_delivary # 완료
     if params[:date].present? && params[:name].present?
       name = params[:name]
       date = params[:date]
@@ -196,7 +225,6 @@ class DailyClosingController < ApplicationController
           end
         end
       elsif params[:delivary].to_i == 0 # 생성시
-        p 'hihi'
         @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status)
         respond_to do |format|
           begin @add_delivary.save!
@@ -209,33 +237,38 @@ class DailyClosingController < ApplicationController
     end
   end
 
-  def update_credit
+  def update_credit # 완료
     if params[:credit].to_i == 1 # 외상목록에 있는 내용을 외상체크로 복구
       if params[:return_credits_ids].present?
         return_credits_ids = params[:return_credits_ids]
-        return_credits_ids.each do |credit|
-          index = credit.to_i
-          delivary = Delivary.find_by(id: index)
-          delivary.update(status: Status::Delivary_checking)
+        Delivary.transaction do
+          return_credits_ids.each do |credit|
+            index = credit.to_i
+            delivary = Delivary.find_by(id: index)
+            delivary.update(status: Status::Delivary_checking)
+          end
         end
       end
     elsif params[:credit].to_i == 2 # 외상체크에있는 내용을 배달목록으로 복구
       if params[:credits_ids].present?
         credits_ids = params[:credits_ids]
-        credits_ids.each do |credit|
-          index = credit.to_i
-          delivary = Delivary.find_by(id: index)
-          delivary.update(status: Status::Delivary_ready)
+        Delivary.transaction do
+          credits_ids.each do |credit|
+            index = credit.to_i
+            delivary = Delivary.find_by(id: index)
+            delivary.update(status: Status::Delivary_ready)
+          end
         end
       end
     elsif params[:credit].to_i == 3 # 외상체크에 있는 내용을 외상목록으로 넘김
       if params[:credits_ids].present?
         credits_ids = params[:credits_ids]
-        credits_ids.each do |credit|
-          index = credit.to_i
-          delivary = Delivary.find_by(id: index)
-          delivary.update(status: Status::Delivary_credit)
-
+        Delivary.transaction do
+          credits_ids.each do |credit|
+            index = credit.to_i
+            delivary = Delivary.find_by(id: index)
+            delivary.update(status: Status::Delivary_credit)
+          end
         end
       end
     end
@@ -243,20 +276,31 @@ class DailyClosingController < ApplicationController
     respond_to do |format|
       format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ) }
     end
+
+  rescue => e
+    respond_to do |format|
+      format.html { redirect_to daily_closing_report_path(:deliver => params[:deliver] ),:flash => { :error => '오류가 발생했습니다.' } }
+    end
   end
 
-  def delete_credit
-    if params[:return_credits_ids].present?
-      return_credits_ids = params[:return_credits_ids]
-      return_credits_ids.each do |credit|
-        index = credit.to_i
-        delivary = Credit.find_by(id: index)
-        delivary.destroy
+  def delete_credit # 완료
+    Delivary.transaction do
+      if params[:return_credits_ids].present?
+        return_credits_ids = params[:return_credits_ids]
+        return_credits_ids.each do |credit|
+          index = credit.to_i
+          delivary = Credit.find_by(id: index)
+          delivary.destroy
+        end
       end
     end
 
     respond_to do |format|
       format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ) }
+    end
+  rescue => e
+    respond_to do |format|
+      format.html { redirect_to daily_closing_edit_path(:id => params[:id], :deliver => params[:deliver] ), :flash => { :error => '오류가 발생했습니다.' } }
     end
   end
 
@@ -275,22 +319,29 @@ class DailyClosingController < ApplicationController
     end
 
     @done_delivary = Delivary.where('status = ? or status = ?', Status::Delivary_credit, Status::Delivary_edit)
-    @done_delivary.each do |delivary|
-      if delivary.status == 4
-        product_name = delivary.product_name
-        product_num = delivary.product_num
-        daily_closing_id = params[:id]
-        @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
-        @daily_closing_done_delivary.save
+    ApplicationRecord.transaction do
+      @done_delivary.each do |delivary|
+        if delivary.status == 4
+          product_name = delivary.product_name
+          product_num = delivary.product_num
+          daily_closing_id = params[:id]
+          @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
+          @daily_closing_done_delivary.save!
+        end
+        delivary.update!(status: Status::Delivary_done)
       end
-      delivary.update(status: Status::Delivary_done)
-    end
 
-    @daily_closing = DailyClosing.find_by_id(params[:id])
-    @daily_closing.update(total_cost: total_cost)
+      @daily_closing = DailyClosing.find_by_id(params[:id])
+      @daily_closing.update!(total_cost: total_cost)
+    end
 
     respond_to do |format|
       format.html { redirect_to daily_closing_show_path(:id => params[:id], :deliver => params[:deliver] ) }
+    end
+
+  rescue => e
+    respond_to do |format|
+      format.html { redirect_to daily_closing_show_path(:id => params[:id], :deliver => params[:deliver] ), :flash => { :error => '오류가 발생했습니다.' } }
     end
   end
 end
