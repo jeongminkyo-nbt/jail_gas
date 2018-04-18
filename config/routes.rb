@@ -22,10 +22,15 @@ Rails.application.routes.draw do
     post '/daily_closing/:id/edit/destroy' => :delete_credit, :as => 'daily_closing_delete'
     post '/daily_closing/:id/edit_delivary' => :edit_delivary, :as =>'daily_closing_edit_delivary'
   end
+
   controller :config do
     get '/configs' => :index
     get '/configs/edit' => :edit, :as => 'edit_config'
     post '/configs/edit' => :update
+  end
+
+  controller :warehouse do
+    get '/warehouse' => :index
   end
 
   controller :company_hosing do

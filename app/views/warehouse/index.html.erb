@@ -1,0 +1,41 @@
+<h1>창고현황</h1>
+<% flash.each do |type, message| %>
+  <div class="alert <%= bootstrap_class_for(type) %> alert-dismissable fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <p class="notice"><%= message %></p>
+  </div>
+<% end %>
+<br>
+<div class="col-md-6 ">
+  <%= form_tag warehouse_path, method: :get do %>
+    <%= select_date Date.today, prefix: :start_date %>
+    ~ <%= select_date Date.today, prefix: :end_date %><%= submit_tag '검색' %>
+  <% end %>
+</div>
+<table class="table table-hover no-more-tables" style="margin-top: 80px;">
+  <thead>
+  <tr>
+    <th class="h-align">날 짜</th>
+    <th class="h-align">10kg</th>
+    <th class="h-align">20kg</th>
+    <th class="h-align">50kg</th>
+    <th class="h-align">산소</th>
+    <th class="h-align">부탄</th>
+    <th class="h-align">아르곤</th>
+    <th class="h-align">입고/출고</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+<br>
+<button class="btn-sm">
+  <%= link_to '추가', new_delivary_path %>
+</button>
+
+<div class="col-md-12">
+  <div style="margin-top: 8px; text-align: center; ">
+
+  </div>
+</div>

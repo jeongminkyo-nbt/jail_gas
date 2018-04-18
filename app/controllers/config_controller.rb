@@ -1,5 +1,5 @@
 class ConfigController < ApplicationController
-  before_action :authenticate_user!, only: [:index]
+  before_action :authenticate_user!, only: [:index, :edit, :update]
 
   def index
     @config = Config.all

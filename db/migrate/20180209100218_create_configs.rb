@@ -3,6 +3,7 @@ class CreateConfigs < ActiveRecord::Migration[5.0]
     create_table :configs do |t|
       t.string :product_name
       t.integer :cost
+      t.integer :count
 
       t.timestamps
     end
