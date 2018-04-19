@@ -9,6 +9,7 @@ class CreateWarehouses < ActiveRecord::Migration[5.0]
       t.integer :butane
       t.integer :argon
       t.integer :status
+      t.string :manager
 
       t.timestamps
     end

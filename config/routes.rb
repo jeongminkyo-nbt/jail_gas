@@ -31,6 +31,10 @@ Rails.application.routes.draw do
 
   controller :warehouse do
     get '/warehouse' => :index
+    post '/warehouse' => :create, :as => 'warehouse_create'
+    get '/warehouse/new' => :new
+    get '/warehouse/:id/edit' =>:edit
+    put '/warehouse/:id' =>:update, :as => 'warehouse_update'
   end
 
   controller :company_hosing do

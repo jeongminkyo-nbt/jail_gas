@@ -23,15 +23,28 @@
     <th class="h-align">부탄</th>
     <th class="h-align">아르곤</th>
     <th class="h-align">입고/출고</th>
+    <th class="h-align">담당자</th>
   </tr>
   </thead>
   <tbody>
-
+  <% @warehouses.each do |warehouse| %>
+    <tr id="<%= dom_id(warehouse) %>"  class="linkable" data-href="<%= warehouse_path+'/'+warehouse.id.to_s + '/edit'%>">
+      <td><%= warehouse.date %></td>
+      <td><%= warehouse.gas_10kg %></td>
+      <td><%= warehouse.gas_20kg %></td>
+      <td><%= warehouse.gas_50kg %></td>
+      <td><%= warehouse.air %></td>
+      <td><%= warehouse.butane %></td>
+      <td><%= warehouse.argon %></td>
+      <td><%= show_status(warehouse.status) %></td>
+      <td><%= warehouse.manager %></td>
+    </tr>
+  <% end %>
   </tbody>
 </table>
 <br>
 <button class="btn-sm">
-  <%= link_to '추가', new_delivary_path %>
+  <%= link_to '추가', warehouse_new_path %>
 </button>
 
 <div class="col-md-12">
@@ -39,3 +52,16 @@
 
   </div>
 </div>
+
+
+<script>
+    $(document).ready(function(){
+        $('table td').click(function(){
+            window.location = $(this).parent().data('href');
+            return false;
+        });
+
+        $('[data-toggle="tooltip"]').tooltip();
+        $(".warehouse").addClass("active");
+    });
+</script>

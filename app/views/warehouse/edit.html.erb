@@ -6,7 +6,7 @@
   </div>
 <% end %>
 <br>
-<%= form_tag warehouse_create_path(), method: :post, class: 'form-inline' do %>
+<%= form_tag warehouse_update_path(), method: :put, class: 'form-inline' do %>
   <table class="table table-hover no-more-tables" style="margin-top: 80px;">
     <thead>
     <tr>
@@ -17,31 +17,31 @@
     <tbody>
     <tr>
       <td>날짜</td>
-      <td><input type="text" name="date" id="date"></td>
+      <td><input type="text" name="date" id="date", value="<%= @warehouse.date %>"></td>
     </tr>
     <tr>
       <td>10kg</td>
-      <td><input type="text" name="gas_10kg"></td>
+      <td><input type="text" name="gas_10kg", value="<%= @warehouse.gas_10kg %>"></td>
     </tr>
     <tr>
       <td>20kg</td>
-      <td><input type="text" name="gas_20kg"></td>
+      <td><input type="text" name="gas_20kg", value="<%= @warehouse.gas_20kg %>"></td>
     </tr>
     <tr>
       <td>50kg</td>
-      <td><input type="text" name="gas_50kg"></td>
+      <td><input type="text" name="gas_50kg", value="<%= @warehouse.gas_50kg %>"></td>
     </tr>
     <tr>
       <td>산소</td>
-      <td><input type="text" name="air"></td>
+      <td><input type="text" name="air", value="<%= @warehouse.air %>"></td>
     </tr>
     <tr>
       <td>부탄</td>
-      <td><input type="text" name="butane"></td>
+      <td><input type="text" name="butane", value="<%= @warehouse.butane %>"></td>
     </tr>
     <tr>
       <td>아르곤</td>
-      <td><input type="text" name="argon"></td>
+      <td><input type="text" name="argon", value="<%= @warehouse.argon %>"></td>
     </tr>
     <tr>
       <td>입고/출고</td>
@@ -54,7 +54,7 @@
     </tbody>
   </table>
   <br>
-  <button class="btn-sm" type="submit" style="float : right">생성</button>
+  <button class="btn-sm" type="submit" style="float : right">수정</button>
 <% end %>
 <div class="col-md-12">
   <div style="margin-top: 8px; text-align: center; ">
