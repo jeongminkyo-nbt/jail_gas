@@ -4,6 +4,14 @@ class Delivary < ApplicationRecord
   include Authority::Abilities
   LIST_PER_PAGE = 25
 
+  module Status
+    Delivary_ready = 0
+    Delivary_checking = 1
+    Delivary_credit = 2
+    Delivary_done = 3
+    Delivary_edit = 4
+  end
+
   def self.change_string_to_time(time_str)
     Time.parse("#{time_str['year']}-#{time_str['month']}-#{time_str['day']}").strftime('%Y-%m-%d')
   end

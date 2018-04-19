@@ -3,14 +3,6 @@ class DailyClosingController < ApplicationController
 
   LIST_PER_PAGE = 25
 
-  module Status
-    Delivary_ready = 0
-    Delivary_checking = 1
-    Delivary_credit = 2
-    Delivary_done = 3
-    Delivary_edit = 4
-  end
-
   def index
     page = params[:page].blank? ? 1 : params[:page]
     @daily_closing = DailyClosing.where('deliver= ?', params[:deliver]).order('id DESC').page(page).per(LIST_PER_PAGE)
@@ -78,7 +70,7 @@ class DailyClosingController < ApplicationController
       end
 
       done_delivary.each do |delivary|
-        delivary.update!(status: Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
+        delivary.update!(status: Delivary::Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
       end
     end
 
@@ -137,7 +129,7 @@ class DailyClosingController < ApplicationController
           delivary_ids.each do |delivary|
             index = delivary.to_i
             deliv = Delivary.find_by(id: index)
-            deliv.update!(status: Status::Delivary_checking)
+            deliv.update!(status: Delivary::Status::Delivary_checking)
           end
         end
       end
@@ -172,7 +164,7 @@ class DailyClosingController < ApplicationController
           delivary_ids.each do |delivary|
             index = delivary.to_i
             deliv = Delivary.find_by(id: index)
-            deliv.update!(status: Status::Delivary_credit)
+            deliv.update!(status: Delivary::Status::Delivary_credit)
             date = deliv.date
             name = deliv.name
             product_name_ko = deliv.product_name
@@ -222,10 +214,10 @@ class DailyClosingController < ApplicationController
       product_name = params[:product_name]
       product_num = params[:product_num].to_i
       deliver = params[:deliver]
-      status = Status::Delivary_ready
+      status = Delivary::Status::Delivary_ready
       if params[:delivary].to_i == 1 # 수정시
         daily_closing_id = params[:id].to_i
-        status = Status::Delivary_edit
+        status = Delivary::Status::Delivary_edit
         @add_delivary = Delivary.new(:date => date, :name => name, :product_name => product_name, :product_num => product_num, :deliver => deliver, :status => status, :daily_closing_id => daily_closing_id)
 
         respond_to do |format|
@@ -256,7 +248,7 @@ class DailyClosingController < ApplicationController
           return_credits_ids.each do |credit|
             index = credit.to_i
             delivary = Delivary.find_by(id: index)
-            delivary.update!(status: Status::Delivary_checking)
+            delivary.update!(status: Delivary::Status::Delivary_checking)
           end
         end
       end
@@ -267,7 +259,7 @@ class DailyClosingController < ApplicationController
           credits_ids.each do |credit|
             index = credit.to_i
             delivary = Delivary.find_by(id: index)
-            delivary.update!(status: Status::Delivary_ready)
+            delivary.update!(status: Delivary::Status::Delivary_ready)
           end
         end
       end
@@ -278,7 +270,7 @@ class DailyClosingController < ApplicationController
           credits_ids.each do |credit|
             index = credit.to_i
             delivary = Delivary.find_by(id: index)
-            delivary.update!(status: Status::Delivary_credit)
+            delivary.update!(status: Delivary::Status::Delivary_credit)
           end
         end
       end
@@ -329,7 +321,7 @@ class DailyClosingController < ApplicationController
       total_cost += delivary['sum(product_num)'].to_i * Config.where('product_name = ?',delivary['product_name']).first.cost.to_i
     end
 
-    @done_delivary = Delivary.where('status = ? or status = ?', Status::Delivary_credit, Status::Delivary_edit)
+    @done_delivary = Delivary.where('status = ? or status = ?', Delivary::Status::Delivary_credit, Delivary::Status::Delivary_edit)
     ApplicationRecord.transaction do
       @done_delivary.each do |delivary|
         if delivary.status == 4
@@ -339,7 +331,7 @@ class DailyClosingController < ApplicationController
           @daily_closing_done_delivary = DailyClosingDoneDelivary.new(:product_name => product_name, :product_num => product_num, :daily_closing_id => daily_closing_id)
           @daily_closing_done_delivary.save!
         end
-        delivary.update!(status: Status::Delivary_done)
+        delivary.update!(status: Delivary::Status::Delivary_done)
       end
 
       @daily_closing = DailyClosing.find_by_id(params[:id])

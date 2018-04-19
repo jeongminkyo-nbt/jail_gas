@@ -4,6 +4,11 @@ class Warehouse < ApplicationRecord
   include Authority::Abilities
   LIST_PER_PAGE = 25
 
+  module Status
+    INSERT = 0
+    OUT = 1
+  end
+
   def self.change_string_to_time(time_str)
     Time.parse("#{time_str['year']}-#{time_str['month']}-#{time_str['day']}").strftime('%Y-%m-%d')
   end

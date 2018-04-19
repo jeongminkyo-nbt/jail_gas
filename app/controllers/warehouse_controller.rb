@@ -22,6 +22,8 @@ class WarehouseController < ApplicationController
 
   def create
     @warehouse = Warehouse.new(warehouse_params)
+    Config.update_count(params[:gas_10kg], params[:gas_20kg], params[:gas_50kg], params[:air], params[:butane], params[:argon],params[:status])
+
     respond_to do |format|
       if @warehouse.save()
         format.html { redirect_to warehouse_path, notice: '입/출고가 성공적으로 생성되었습니다.' }
@@ -33,6 +35,10 @@ class WarehouseController < ApplicationController
 
   def update
     @warehouse = Warehouse.find_by_id(params[:id])
+    before = Warehouse.find_by_id(params[:id])
+
+    Config.update_count(params[:gas_10kg].to_i - before.gas_10kg.to_i, params[:gas_20kg].to_i - before.gas_20kg.to_i, params[:gas_50kg].to_i - before.gas_50kg.to_i, params[:air].to_i - before.air.to_i, params[:butane].to_i - before.butane.to_i, params[:argon].to_i - before.argon.to_i,params[:status])
+
     respond_to do |format|
       if @warehouse.update(warehouse_params)
         format.html { redirect_to warehouse_path, notice: '입/출고가 수정되었습니다.' }

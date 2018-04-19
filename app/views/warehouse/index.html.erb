@@ -6,13 +6,38 @@
   </div>
 <% end %>
 <br>
-<div class="col-md-6 ">
+<div>
   <%= form_tag warehouse_path, method: :get do %>
     <%= select_date Date.today, prefix: :start_date %>
     ~ <%= select_date Date.today, prefix: :end_date %><%= submit_tag '검색' %>
   <% end %>
 </div>
-<table class="table table-hover no-more-tables" style="margin-top: 80px;">
+<div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
+  <h2><%= Config.find_by_id(1).count %></h2>
+  <h3>10kg</h3>
+</div>
+<div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
+  <h2 ><%= Config.find_by_id(2).count %></h2>
+  <h3>20kg</h3>
+</div>
+<div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
+  <h2 ><%= Config.find_by_id(3).count %></h2>
+  <h3>50kg</h3>
+</div>
+<div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
+  <h2 ><%= Config.find_by_id(4).count %></h2>
+  <h3>산소</h3>
+</div>
+<div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
+  <h2 ><%= Config.find_by_id(5).count %></h2>
+  <h3>부탄</h3>
+</div>
+<div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
+  <h2 ><%= Config.find_by_id(6).count %></h2>
+  <h3>아르곤</h3>
+</div>
+
+<table class="table table-hover no-more-tables">
   <thead>
   <tr>
     <th class="h-align">날 짜</th>
