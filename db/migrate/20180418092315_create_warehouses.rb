@@ -10,6 +10,7 @@ class CreateWarehouses < ActiveRecord::Migration[5.0]
       t.integer :argon
       t.integer :status
       t.string :manager
+      t.integer :daily_closing_id
 
       t.timestamps
     end

@@ -53,17 +53,21 @@
   </thead>
   <tbody>
   <% @warehouses.each do |warehouse| %>
-    <tr id="<%= dom_id(warehouse) %>"  class="linkable" data-href="<%= warehouse_path+'/'+warehouse.id.to_s + '/edit'%>">
-      <td><%= warehouse.date %></td>
-      <td><%= warehouse.gas_10kg %></td>
-      <td><%= warehouse.gas_20kg %></td>
-      <td><%= warehouse.gas_50kg %></td>
-      <td><%= warehouse.air %></td>
-      <td><%= warehouse.butane %></td>
-      <td><%= warehouse.argon %></td>
-      <td><%= show_status(warehouse.status) %></td>
-      <td><%= warehouse.manager %></td>
-    </tr>
+    <% if warehouse.daily_closing_id.nil? %>
+      <tr id="<%= dom_id(warehouse) %>"  class="linkable" data-href="<%= warehouse_path+'/'+warehouse.id.to_s + '/edit'%>">
+    <% else %>
+      <tr data-href="<%= warehouse_path %>">
+    <% end %>
+        <td><%= warehouse.date %></td>
+        <td><%= warehouse.gas_10kg %></td>
+        <td><%= warehouse.gas_20kg %></td>
+        <td><%= warehouse.gas_50kg %></td>
+        <td><%= warehouse.air %></td>
+        <td><%= warehouse.butane %></td>
+        <td><%= warehouse.argon %></td>
+        <td><%= show_status(warehouse.status) %></td>
+        <td><%= warehouse.manager %></td>
+      </tr>
   <% end %>
   </tbody>
 </table>

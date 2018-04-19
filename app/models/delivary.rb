@@ -50,10 +50,17 @@ class Delivary < ApplicationRecord
         .order(date: :desc).page(page).per(LIST_PER_PAGE)
   end
 
-  def self.get_total_all(deliver)
+  def self.get_cost_all(deliver)
     Delivary
         .select('product_name,sum(product_num) as product_num_all')
         .where('deliver = ? and status = ?', deliver, 1)
+        .group('product_name')
+  end
+
+  def self.get_delivary_all(deliver)
+    Delivary
+        .select('product_name,sum(product_num) as product_num_all')
+        .where('deliver = ? and (status = ? or status = ?)', deliver, 1, 2)
         .group('product_name')
   end
 

@@ -16,15 +16,36 @@ class DailyClosingController < ApplicationController
     @daily_closing_done_delivary = DailyClosingDoneDelivary.get_done_all_daily_closing(params[:id])
   end
 
+  def closing
+    @delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], Delivary::Status::Delivary_ready)
+    @check_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], Delivary::Status::Delivary_checking)
+    @credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], Delivary::Status::Delivary_credit)
+    @done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], Delivary::Status::Delivary_checking, Delivary::Status::Delivary_credit)
+    @cost_delivary = Delivary.get_cost_all(params[:deliver])
+
+    @total_cost = 0
+    @cost_delivary.each do |delivary|
+      if delivary.product_name == '아르곤'
+        delivary.product_name = 'argon'
+      elsif delivary.product_name == '산소'
+        delivary.product_name = 'air'
+      elsif delivary.product_name == '부탄'
+        delivary.product_name = 'butane'
+      end
+      @total_cost += delivary.product_num_all.to_i * Config.where('product_name = ?',delivary.product_name).first.cost.to_i
+    end
+  end
+
   def create
-    credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
-    done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], 1, 2)
-    check_delivary = Delivary.where('deliver= ? and status = ?',params[:deliver],1)
-    cost_delivary = Delivary.get_total_all(params[:deliver])
+    credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], Delivary::Status::Delivary_credit)
+    done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], Delivary::Status::Delivary_checking, Delivary::Status::Delivary_credit)
+    check_delivary = Delivary.where('deliver= ? and status = ?',params[:deliver],Delivary::Status::Delivary_checking)
+    cost_delivary = Delivary.get_cost_all(params[:deliver])
     date = params[:report_date]
     deliver = params[:deliver]
     total_cost = 0
 
+    #total cost 값 계산
     cost_delivary.each do |delivary|
       if delivary.product_name == '아르곤'
         delivary.product_name = 'argon'
@@ -40,7 +61,7 @@ class DailyClosingController < ApplicationController
       @add_daily_closing = DailyClosing.new(:date => date, :deliver => deliver, :total_cost => total_cost)
       @add_daily_closing.save!
 
-
+      #배달 목록들 관계 설정
       check_delivary.each do |delivary|
         product_name = delivary.product_name
         product_num = delivary.product_num
@@ -49,6 +70,7 @@ class DailyClosingController < ApplicationController
         @daily_closing_done_delivary.save!
       end
 
+      #외상목록 생성
       credit_delivary.each do |delivary|
         date = delivary.date
         name = delivary.name
@@ -68,6 +90,34 @@ class DailyClosingController < ApplicationController
         @add_credit = Credit.new(:date => date, :name => name, :cost => cost, :status => status, :product_name => product_name_ko, :product_num => product_num, :daily_closing_id => daily_closing_id)
         @add_credit.save!
       end
+
+      # 창고 갯수 수정 밑 히스토리 기록
+      all_delivary_done = Delivary.get_delivary_all(params[:deliver])
+      gas_10kg = nil
+      gas_20kg = nil
+      gas_50kg = nil
+      air = nil
+      butane = nil
+      argon = nil
+      all_delivary_done.each do |delivary|
+        if delivary.product_name == '10kg'
+          gas_10kg = delivary.product_num_all
+        elsif delivary.product_name == '20kg'
+          gas_20kg = delivary.product_num_all
+        elsif delivary.product_name == '50kg'
+          gas_50kg = delivary.product_num_all
+        elsif delivary.product_name == '산소'
+          air = delivary.product_num_all
+        elsif delivary.product_name == '부탄'
+          butane = delivary.product_num_all
+        elsif delivary.product_name == '아르곤'
+          argon = delivary.product_num_all
+        end
+      end
+
+      Config.update_count(gas_10kg, gas_20kg, gas_50kg, air, butane, argon, Warehouse::Status::OUT)
+      @warehouse = Warehouse.new(:date => date, :gas_10kg => gas_10kg, :gas_20kg => gas_20kg, :gas_50kg => gas_50kg, :air => air, :butane =>butane, :argon => argon, :status => Warehouse::Status::OUT, :manager => params[:deliver], :daily_closing_id => @add_daily_closing.id)
+      @warehouse.save!
 
       done_delivary.each do |delivary|
         delivary.update!(status: Delivary::Status::Delivary_done, daily_closing_id: @add_daily_closing.id)
@@ -101,25 +151,7 @@ class DailyClosingController < ApplicationController
     end
   end
 
-  def closing
-    @delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 0)
-    @check_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 1)
-    @credit_delivary = Delivary.where('deliver = ? and status = ?', params[:deliver], 2)
-    @done_delivary = Delivary.where('deliver= ? and status = ? or status = ?',params[:deliver], 1, 2)
-    @cost_delivary = Delivary.get_total_all(params[:deliver])
 
-    @total_cost = 0
-    @cost_delivary.each do |delivary|
-      if delivary.product_name == '아르곤'
-        delivary.product_name = 'argon'
-      elsif delivary.product_name == '산소'
-        delivary.product_name = 'air'
-      elsif delivary.product_name == '부탄'
-        delivary.product_name = 'butane'
-      end
-      @total_cost += delivary.product_num_all.to_i * Config.where('product_name = ?',delivary.product_name).first.cost.to_i
-    end
-  end
 
   def update_delivary
     if params[:delivary].to_i == 0 # 외상 생성
@@ -336,6 +368,8 @@ class DailyClosingController < ApplicationController
 
       @daily_closing = DailyClosing.find_by_id(params[:id])
       @daily_closing.update!(total_cost: total_cost)
+
+      
     end
 
     respond_to do |format|
