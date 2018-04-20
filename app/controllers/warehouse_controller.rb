@@ -6,7 +6,7 @@ class WarehouseController < ApplicationController
     where_clause = Warehouse.make_where_clause(params)
 
     @warehouses = Warehouse.find_warehouse_list(page, where_clause)
-
+    authorize_action_for @warehouses
     respond_to do |format|
       format.html
     end
