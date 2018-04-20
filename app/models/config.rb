@@ -15,7 +15,7 @@ class Config < ApplicationRecord
     if status.to_i == Warehouse::Status::INSERT
       Config.transaction do
         (1..6).each do |index|
-          if arr[index-1].present?
+          if arr[index-1] != 0
             count = Config.find_by_id(index).count + arr[index-1].to_i
             Config.find_by_id(index).update!(count: count)
           end
@@ -24,7 +24,7 @@ class Config < ApplicationRecord
     elsif status.to_i == Warehouse::Status::OUT
       Config.transaction do
         (1..6).each do |index|
-          if arr[index-1].present?
+          if arr[index-1] != 0
             count = Config.find_by_id(index).count - arr[index-1].to_i
             Config.find_by_id(index).update!(count: count)
           end

@@ -93,12 +93,12 @@ class DailyClosingController < ApplicationController
 
       # 창고 갯수 수정 밑 히스토리 기록
       all_delivary_done = Delivary.get_delivary_all(params[:deliver])
-      gas_10kg = nil
-      gas_20kg = nil
-      gas_50kg = nil
-      air = nil
-      butane = nil
-      argon = nil
+      gas_10kg = 0
+      gas_20kg = 0
+      gas_50kg = 0
+      air = 0
+      butane = 0
+      argon = 0
       all_delivary_done.each do |delivary|
         if delivary.product_name == '10kg'
           gas_10kg = delivary.product_num_all
@@ -369,7 +369,32 @@ class DailyClosingController < ApplicationController
       @daily_closing = DailyClosing.find_by_id(params[:id])
       @daily_closing.update!(total_cost: total_cost)
 
-      
+      get_delivary_done = Delivary.get_done_all_daily_closing(params[:id])
+      gas_10kg = 0
+      gas_20kg = 0
+      gas_50kg = 0
+      air = 0
+      butane = 0
+      argon = 0
+      get_delivary_done.each do |delivary|
+        if delivary.product_name == '10kg'
+          gas_10kg = delivary.product_num_all
+        elsif delivary.product_name == '20kg'
+          gas_20kg = delivary.product_num_all
+        elsif delivary.product_name == '50kg'
+          gas_50kg = delivary.product_num_all
+        elsif delivary.product_name == '산소'
+          air = delivary.product_num_all
+        elsif delivary.product_name == '부탄'
+          butane = delivary.product_num_all
+        elsif delivary.product_name == '아르곤'
+          argon = delivary.product_num_all
+        end
+      end
+
+      @warehouse = Warehouse.find_by_daily_closing_id(params[:id].to_i)
+      Config.update_count(gas_10kg.to_i - @warehouse.gas_10kg.to_i, gas_20kg.to_i - @warehouse.gas_20kg.to_i, gas_50kg.to_i - @warehouse.gas_50kg.to_i, air.to_i - @warehouse.air.to_i, butane.to_i - @warehouse.butane.to_i, argon.to_i - @warehouse.argon.to_i, Warehouse::Status::OUT)
+      @warehouse.update!(gas_10kg: gas_10kg, gas_20kg: gas_20kg, gas_50kg: gas_50kg, air: air, butane: butane, argon: argon)
     end
 
     respond_to do |format|
