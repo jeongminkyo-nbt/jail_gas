@@ -5,11 +5,11 @@ class Delivary < ApplicationRecord
   LIST_PER_PAGE = 25
 
   module Status
-    Delivary_ready = 0
-    Delivary_checking = 1
-    Delivary_credit = 2
-    Delivary_done = 3
-    Delivary_edit = 4
+    DELIVARY_READY = 0
+    DELIVARY_CHECKING = 1
+    DELIVARY_CREDIT = 2
+    DELIVARY_DONE = 3
+    DELIVARY_EDIT = 4
   end
 
   def self.change_string_to_time(time_str)

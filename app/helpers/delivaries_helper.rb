@@ -15,7 +15,3 @@ module DelivariesHelper
 
 end
 
-Delivary_ready = 0
-Delivary_checking = 1
-Delivary_credit = 2
-Delivary_done = 3
