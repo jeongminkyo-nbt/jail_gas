@@ -66,6 +66,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # xlsx 다운
-gem 'rubyzip', '= 1.0.0'
+gem 'rubyzip', '~> 1.0.0'
 gem 'axlsx', '= 2.0.1'
 gem 'axlsx_rails'
