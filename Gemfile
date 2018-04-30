@@ -51,7 +51,11 @@ gem 'jbuilder', '~> 2.5'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'rspec-rails'             # rails 지원하는 rspec
+  gem 'factory_bot_rails'       # 테스트 위한 DB의 데이타를 쉽게 생성
+  gem 'faker'                   # 샘플 테스트 데이터를 쉽게 생성
 end
+
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
