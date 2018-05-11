@@ -13,27 +13,27 @@
   <% end %>
 </div>
 <div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
-  <h2><%= Config.find_by_id(1).count %></h2>
+  <h2><span class="gas_10kg"><%= Config.find_by_id(1).count %></span></h2>
   <h3>10kg</h3>
 </div>
 <div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
-  <h2 ><%= Config.find_by_id(2).count %></h2>
+  <h2 ><span class="gas_20kg"><%= Config.find_by_id(2).count %></span></h2>
   <h3>20kg</h3>
 </div>
 <div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
-  <h2 ><%= Config.find_by_id(3).count %></h2>
+  <h2 ><span class="gas_50kg"><%= Config.find_by_id(3).count %></span></h2>
   <h3>50kg</h3>
 </div>
 <div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
-  <h2 ><%= Config.find_by_id(4).count %></h2>
+  <h2 ><span class="air"><%= Config.find_by_id(4).count %></span></h2>
   <h3>산소</h3>
 </div>
 <div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
-  <h2 ><%= Config.find_by_id(5).count %></h2>
+  <h2 ><span class="butane"><%= Config.find_by_id(5).count %></span></h2>
   <h3>부탄</h3>
 </div>
 <div class="col-md-2" style="margin-top: 20px; margin-bottom: 50px; text-align: center">
-  <h2 ><%= Config.find_by_id(6).count %></h2>
+  <h2 ><span class="argon"><%= Config.find_by_id(6).count %></span></h2>
   <h3>아르곤</h3>
 </div>
 
@@ -92,5 +92,12 @@
 
         $('[data-toggle="tooltip"]').tooltip();
         $(".warehouse").addClass("active");
+        $('.gas_10kg').animateNumber({ number: <%= Config.find_by_id(1).count %> });
+        $('.gas_20kg').animateNumber({ number: <%= Config.find_by_id(2).count %> });
+        $('.gas_50kg').animateNumber({ number: <%= Config.find_by_id(3).count %> });
+        $('.air').animateNumber({ number: <%= Config.find_by_id(4).count %> });
+        $('.butane').animateNumber({ number: <%= Config.find_by_id(5).count %> });
+        $('.argon').animateNumber({ number: <%= Config.find_by_id(6).count %> });
+
     });
 </script>
